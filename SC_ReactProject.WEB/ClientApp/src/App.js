@@ -1,23 +1,38 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
 
 import './custom.css'
 import { EmployeesList } from './components/EmployeesList';
+import LogInForm from './components/LogInForm';
 
-export default class App extends Component {
-  static displayName = App.name;
+export default function App() {
 
-  render () {
-    return (
-      <Layout>
-        <Route exact path='/' component={EmployeesList} />
-        {/* <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data' component={FetchData} /> */}
-      </Layout>
-    );
+  const adminUser = {
+    email: "admin",
+    password: "admin"
   }
+
+  const [currentUser, setCurrentUser] = useState({email: "", password: ""});
+
+  const login = details => {
+    if (details.email == adminUser.email && details.password == adminUser.password){
+      setCurrentUser({
+        email: details.email,
+        password: details.password
+      });
+    }
+  }
+
+  return (
+    <div className='App'>
+      {
+        (currentUser.email != "") ? (
+          <div>
+            <EmployeesList />
+          </div>
+        ) : <LogInForm login={login} />
+      }
+    </div>
+  );
 }
