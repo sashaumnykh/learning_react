@@ -2,36 +2,46 @@ import React, { Component } from 'react';
 import { PageButton } from './pageButton';
 
 export class EmployeesList extends Component {
+    constructor(props){
+        debugger;
+        super(props);
+        this.state= {
+            currentPageNumber: 1
+        };
+        this.handlePageButtonChange = this.handlePageButtonChange.bind(this);
+    }
     // async populateEmployeeData() {
     //     const response = await fetch('employees');
     //     const data = await response.json();
     //     this.emps = data;
     //     console.log(data);
     // }
-    currentPageNumber = 1;
-
-    static handlePageButtonChange(newPageNumber){
-        this.currentPageNumber = newPageNumber;
+    handlePageButtonChange(newPageNumber){
+        //debugger;
+        this.setState(
+            { currentPageNumber: newPageNumber.target.value }
+        )
     }
 
-    static renderPagesButtons(pagesNumber){
+    renderPagesButtons(pagesNumber){
         const buttons = [];
         for (let i = 0; i < pagesNumber; i++){
             let number = i + 1;
             buttons.push(
-                <PageButton pageNumber={number}/>
+                <PageButton pageNumber={number} onClick={this.handlePageButtonChange}/>
             );
         }
         return(buttons);
     }
 
-    static renderEmployeesTable(employees) {
+    renderEmployeesTable(employees) {
+        //debugger;
         const maxEmpNumber = 10;
         const employeesNumber = employees.length;
-        const currentPageNumber = 1;
+        const currentPageNumber = this.state.currentPageNumber;
         const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
         const final = [];
-        for (let i = currentPageNumber - 1; i < currentPageNumber * 10; i++){
+        for (let i = (currentPageNumber - 1) * 10; i < currentPageNumber * 10; i++){
             const employee = employees[i];
             final.push(
                 <tr hey={employee.name}>
@@ -95,7 +105,7 @@ export class EmployeesList extends Component {
         ];
         let newEmployees = EmployeesList.getEmployeesList(20);
         // employees = fetch("/employees");
-        let contents = EmployeesList.renderEmployeesTable(newEmployees);
+        let contents = this.renderEmployeesTable(newEmployees);
         return(
             <div>
                 {contents}
