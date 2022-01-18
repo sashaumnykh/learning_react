@@ -3,21 +3,14 @@ import { PageButton } from './pageButton';
 
 export class EmployeesList extends Component {
     constructor(props){
-        debugger;
         super(props);
         this.state= {
             currentPageNumber: 1
         };
         this.handlePageButtonChange = this.handlePageButtonChange.bind(this);
     }
-    // async populateEmployeeData() {
-    //     const response = await fetch('employees');
-    //     const data = await response.json();
-    //     this.emps = data;
-    //     console.log(data);
-    // }
+
     handlePageButtonChange(newPageNumber){
-        //debugger;
         this.setState(
             { currentPageNumber: newPageNumber.target.value }
         )
@@ -35,7 +28,6 @@ export class EmployeesList extends Component {
     }
 
     renderEmployeesTable(employees) {
-        //debugger;
         const maxEmpNumber = 10;
         const employeesNumber = employees.length;
         const currentPageNumber = this.state.currentPageNumber;
@@ -78,6 +70,7 @@ export class EmployeesList extends Component {
             const num = i.toString();
             employees.push(
             {
+                id: i,
                 name: num,
                 email: num + "@mail.ru",
                 salary: i,
