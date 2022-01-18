@@ -3,21 +3,16 @@ import { PageButton } from './pageButton';
 
 export class EmployeesList extends Component {
     constructor(props){
-        debugger;
         super(props);
         this.state= {
-            currentPageNumber: 1
+            currentPageNumber: 1,
+            isEditShown: []
         };
         this.handlePageButtonChange = this.handlePageButtonChange.bind(this);
     }
-    // async populateEmployeeData() {
-    //     const response = await fetch('employees');
-    //     const data = await response.json();
-    //     this.emps = data;
-    //     console.log(data);
-    // }
+    
     handlePageButtonChange(newPageNumber){
-        //debugger;
+        debugger;
         this.setState(
             { currentPageNumber: newPageNumber.target.value }
         )
@@ -34,8 +29,16 @@ export class EmployeesList extends Component {
         return(buttons);
     }
 
+    handleEditShow(index, state){
+        let newState = [...this.state.isEditShown];
+        for (let i = 0; i < newState.length; i++){
+            newState[i] = false;
+        }
+        newState[index] = state;
+        this.setState({isEditShown: newState});
+    }
+
     renderEmployeesTable(employees) {
-        //debugger;
         const maxEmpNumber = 10;
         const employeesNumber = employees.length;
         const currentPageNumber = this.state.currentPageNumber;
@@ -43,19 +46,24 @@ export class EmployeesList extends Component {
         const final = [];
         for (let i = (currentPageNumber - 1) * 10; i < currentPageNumber * 10; i++){
             const employee = employees[i];
+            const isEdible = this.state.isEditShown[i];
             final.push(
-                <tr hey={employee.name}>
-                    <td>{employee.name}</td>
-                    <td>{employee.email}</td>
-                    <td>{employee.bday}</td>
-                    <td>{employee.salary}</td>
-                    <td>{employee.lastModified}</td>
-                </tr>
+                <div onMouseEnter={() => this.handleEditShow(i, true)} 
+                onMouseLeave={() => this.handleEditShow(i, false)}>
+                    <tr hey={employee.name}>
+                        <td>{employee.name}</td>
+                        <td>{employee.email}</td>
+                        <td>{employee.bday}</td>
+                        <td>{employee.salary}</td>
+                        <td>{employee.lastModified}</td>
+                        <td>{isEdible && "Edit"}</td>
+                    </tr>
+                </div>
             );
         }
         return(
             <div>
-            <table className='table table-striped' atia-aria-labelledby='tablelabel'>
+            <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
                     <th>Name</th>
                     <th>Email</th>
@@ -69,7 +77,7 @@ export class EmployeesList extends Component {
             </table>
             {this.renderPagesButtons(pagesNumber)}
             </div>
-        );
+        )
     }
 
     static getEmployeesList(number){
