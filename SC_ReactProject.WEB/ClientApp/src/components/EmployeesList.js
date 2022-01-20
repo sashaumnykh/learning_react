@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { useHistory } from 'react-router-dom';
 import { PageButton } from './pageButton';
+import { EditEmployeeButton } from './EditEmployeeButton';
 
 export class EmployeesList extends Component {
     constructor(props){
@@ -12,7 +14,6 @@ export class EmployeesList extends Component {
     }
     
     handlePageButtonChange(newPageNumber){
-        debugger;
         this.setState(
             { currentPageNumber: newPageNumber.target.value }
         )
@@ -48,17 +49,21 @@ export class EmployeesList extends Component {
             const employee = employees[i];
             const isEdible = this.state.isEditShown[i];
             final.push(
-                <div onMouseEnter={() => this.handleEditShow(i, true)} 
-                onMouseLeave={() => this.handleEditShow(i, false)}>
-                    <tr hey={employee.name}>
+                <tr hey={employee.name}>
                         <td>{employee.name}</td>
                         <td>{employee.email}</td>
                         <td>{employee.bday}</td>
                         <td>{employee.salary}</td>
                         <td>{employee.lastModified}</td>
-                        <td>{isEdible && "Edit"}</td>
+                        <td>
+                            <EditEmployeeButton id={i}/>
+                        </td>
+                        <td>{
+                            <button>
+                                Delete
+                            </button>
+                        }</td>
                     </tr>
-                </div>
             );
         }
         return(
@@ -70,6 +75,8 @@ export class EmployeesList extends Component {
                     <th>Birthday</th>
                     <th>Salary</th>
                     <th>Last modified date</th>
+                    <th></th>
+                    <th></th>
                 </thead>
                 <tbody>
                     {final}
@@ -86,6 +93,7 @@ export class EmployeesList extends Component {
             const num = i.toString();
             employees.push(
             {
+                id: i,
                 name: num,
                 email: num + "@mail.ru",
                 salary: i,
@@ -118,6 +126,7 @@ export class EmployeesList extends Component {
             <div>
                 {contents}
             </div>
+            
         );
     }
 }
