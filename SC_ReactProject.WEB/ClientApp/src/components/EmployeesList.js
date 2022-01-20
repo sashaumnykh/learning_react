@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
 import { useState } from 'react';
+import '../styles.css';
 
 function EmployeesList() {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -26,9 +27,6 @@ function EmployeesList() {
     };
 
     const renderEmployeesTable = employees => {
-        const maxEmpNumber = 10;
-        const employeesNumber = employees.length;
-        const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
         const final = [];
         for (let i = (currentPageNumber - 1) * 10; i < currentPageNumber * 10; i++){
             const employee = employees[i];
@@ -66,7 +64,6 @@ function EmployeesList() {
                     {final}
                 </tbody>
             </table>
-            {renderPagesButtons(pagesNumber)}
             </div>
         );
     };
@@ -86,15 +83,26 @@ function EmployeesList() {
         return(buttons);
     };
 
-    let newEmployees = getEmployeesList(20);
+    let employees = getEmployeesList(20);
     // employees = fetch("/employees");
-    let contents = renderEmployeesTable(newEmployees);
+    let contents = renderEmployeesTable(employees);
+
+    const maxEmpNumber = 10;
+    const employeesNumber = employees.length;
+    const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
 
     return(
-        <div className='employees-list'>
-            <h1>Employees list:</h1>
+        <div className='employee-list'>
+            <h1>Employees:</h1>
             {contents}
-            <button onClick={() => {history.push('/add')}}>Add</button>
+            <div className='buttons'>
+                <div className='add'>
+                    <button onClick={() => {history.push('/add')}}>Add</button>
+                </div>
+                <div className='pageNumbers'>
+                    {renderPagesButtons(pagesNumber)}
+                </div>
+            </div>
         </div>
     );
 }

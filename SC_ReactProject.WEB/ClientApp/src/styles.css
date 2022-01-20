@@ -1,25 +1,88 @@
-input {
-  background-color: black;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
+
+@font-face {
+  font-family: Charter;
+  src: url(charter_regular-webfont.woff);
 }
 
-.form-group {
-  background-color: burlywood;
+* {
+  font-family: "Montserrat", sans-serif;
 }
 
-.page-button {
-  background-color: burlywood;
-  width: 50px;
-  height: 50px;
+input,
+button {
+  background: none;
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 15px;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+}
+
+button:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
+.employee-list {
+  padding: 15px;
 }
 
 .employee-table {
   width: 50%;
-}
-
-.edit {
-  background-color: blueviolets;
-}
-
-.App {
+  margin: auto;
+  padding: 15px;
+  border: 5px solid rgb(128, 128, 128);
   text-align: center;
+}
+
+.form-outer {
+  width: 50%;
+  align-items: center;
+  background-image: linear-gradient(
+    to bottom rigth,
+    rgb(229, 255, 0),
+    rgb(56, 56, 56)
+  );
+  background-color: rgb(128, 128, 128);
+  padding: 15px;
+  display: inline-block;
+}
+
+.form-inner {
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+}
+
+#grad {
+  background-image: linear-gradient(
+    to bottom rigth,
+    rgb(229, 255, 0),
+    rgb(56, 56, 56)
+  );
+}
+
+.pageNumbers {
+  align-items: right;
+}
+
+.add {
+  align-items: left;
+  float: left;
+}
+
+.page-button {
+  text-align: center;
+}
+
+.buttons {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
 }

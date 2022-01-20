@@ -30,7 +30,8 @@ function AddEmployeeForm() {
     }
     
     return(
-        <form onSubmit={submitHandler}>
+        <form className='form-outer' onSubmit={submitHandler}>
+        <div className='form-inner'>
             <h1>Add an employee:</h1>
             <div>
                 <label hrmlFor="employeeName">Name:</label>
@@ -54,6 +55,7 @@ function AddEmployeeForm() {
                         value={newUser.salary} />
             </div>
             <button onClick={addButtonHandler}>Add</button>
+            </div>
         </form>
         
     );
