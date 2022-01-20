@@ -1,12 +1,14 @@
 ﻿import React, { Component, useState, useContext } from 'react';
-import { Route } from 'react-router';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
 import { Layout } from './components/Layout';
 
 //import './custom.css'
 import './styles.css'
-import { EmployeesList } from './components/EmployeesList';
+import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
 import { LogInContext } from './helper/Context';
+import { EditEmployee } from './components/EditEmployee';
 
 export default function App() {
 
@@ -32,14 +34,17 @@ export default function App() {
   const isLoggedIn = sessionStorage.getItem('currentUserIsLoggedIn');
 
   return (
-    <LogInContext.Provider value={{ loggedIn: false, setLoggedIn }} className='App'>
-      {
-        isLoggedIn ? (
-          <div>
-            <EmployeesList />
-          </div>
-        ) : <LogInForm login={login} />
-      }
-    </LogInContext.Provider>
+    <BrowserRouter>
+        <Switch>
+          <Route path="/employee/:id">
+            <EditEmployee />
+          </Route>
+          <Route path="/">
+            {isLoggedIn 
+            ? ( <div><EmployeesList /></div>) 
+            : <LogInForm login={login} />}
+          </Route>
+        </Switch>
+    </BrowserRouter>
   );
 }

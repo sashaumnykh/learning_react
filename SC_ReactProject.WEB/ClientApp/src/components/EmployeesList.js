@@ -1,53 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
+import { useState } from 'react';
 
-export class EmployeesList extends Component {
-    constructor(props){
-        super(props);
-        this.state= {
-            currentPageNumber: 1,
-            isEditShown: []
-        };
-        this.handlePageButtonChange = this.handlePageButtonChange.bind(this);
-    }
-    
-    handlePageButtonChange(newPageNumber){
-        this.setState(
-            { currentPageNumber: newPageNumber.target.value }
-        )
-    }
+function EmployeesList() {
+    const [currentPageNumber, setCurrentPageNumber] = useState(1);
 
-    renderPagesButtons(pagesNumber){
-        const buttons = [];
-        for (let i = 0; i < pagesNumber; i++){
-            let number = i + 1;
-            buttons.push(
-                <PageButton pageNumber={number} onClick={this.handlePageButtonChange}/>
+    const getEmployeesList = number => {
+        const employees = [];
+        for (let i = 0; i < number; i++ ) {
+            const num = i.toString();
+            employees.push(
+                {
+                    id: i,
+                    name: num,
+                    email: num + "@mail.ru",
+                    salary: i,
+                    bday: num,
+                }
             );
         }
-        return(buttons);
-    }
+        return employees;
+    };
 
-    handleEditShow(index, state){
-        let newState = [...this.state.isEditShown];
-        for (let i = 0; i < newState.length; i++){
-            newState[i] = false;
-        }
-        newState[index] = state;
-        this.setState({isEditShown: newState});
-    }
-
-    renderEmployeesTable(employees) {
+    const renderEmployeesTable = employees => {
         const maxEmpNumber = 10;
         const employeesNumber = employees.length;
-        const currentPageNumber = this.state.currentPageNumber;
         const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
         const final = [];
         for (let i = (currentPageNumber - 1) * 10; i < currentPageNumber * 10; i++){
             const employee = employees[i];
-            const isEdible = this.state.isEditShown[i];
             final.push(
                 <tr hey={employee.name}>
                         <td>{employee.name}</td>
@@ -82,51 +65,35 @@ export class EmployeesList extends Component {
                     {final}
                 </tbody>
             </table>
-            {this.renderPagesButtons(pagesNumber)}
+            {renderPagesButtons(pagesNumber)}
             </div>
-        )
-    }
+        );
+    };
 
-    static getEmployeesList(number){
-        const employees = [];
-        for(let i = 0; i < number; i++){
-            const num = i.toString();
-            employees.push(
-            {
-                id: i,
-                name: num,
-                email: num + "@mail.ru",
-                salary: i,
-                bday: num,
-            }
+    const handlePageButtonChange = newPageNumber => {
+        setCurrentPageNumber(newPageNumber.target.value);
+    };
+
+    const renderPagesButtons = pagesNumber => {
+        const buttons = [];
+        for (let i = 0; i < pagesNumber; i++){
+            let number = i + 1;
+            buttons.push(
+                <PageButton pageNumber={number} onClick={handlePageButtonChange}/>
             );
         }
-        return employees;
-    }
+        return(buttons);
+    };
 
-    render() {
-        let employees = [
-            {
-                name: "Sasha",
-                email: "sasha@mail.ru",
-                salary: 1000,
-                bday: "17th of march",
-            },
-            {
-                name: "Polina",
-                email: "polina@mail.ru",
-                salary: 2000,
-                bday: "9th of march",
-            }
-        ];
-        let newEmployees = EmployeesList.getEmployeesList(20);
-        // employees = fetch("/employees");
-        let contents = this.renderEmployeesTable(newEmployees);
-        return(
-            <div>
-                {contents}
-            </div>
-            
-        );
-    }
+    let newEmployees = getEmployeesList(20);
+    // employees = fetch("/employees");
+    let contents = renderEmployeesTable(newEmployees);
+
+    return(
+        <div>
+            {contents}
+        </div>
+    );
 }
+
+export default EmployeesList;
