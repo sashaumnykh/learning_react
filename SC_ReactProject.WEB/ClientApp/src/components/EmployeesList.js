@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 function EmployeesList() {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
+    const history = useHistory();
 
     const getEmployeesList = number => {
         const employees = [];
@@ -90,8 +91,10 @@ function EmployeesList() {
     let contents = renderEmployeesTable(newEmployees);
 
     return(
-        <div>
+        <div className='employees-list'>
+            <h1>Employees list:</h1>
             {contents}
+            <button onClick={() => {history.push('/add')}}>Add</button>
         </div>
     );
 }

@@ -9,6 +9,7 @@ import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
 import { LogInContext } from './helper/Context';
 import { EditEmployee } from './components/EditEmployee';
+import AddEmployeeForm from './components/AddEmployeeForm';
 
 export default function App() {
 
@@ -38,6 +39,9 @@ export default function App() {
         <Switch>
           <Route path="/employee/:id">
             <EditEmployee />
+          </Route>
+          <Route path="/add">
+            <AddEmployeeForm />
           </Route>
           <Route path="/">
             {isLoggedIn 
