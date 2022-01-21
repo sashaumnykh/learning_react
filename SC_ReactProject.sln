@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SC_ReactProject.WEB", "SC_ReactProject.WEB\SC_ReactProject.WEB.csproj", "{8EC58B65-5643-44F4-BE7D-77A6B7083EE8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SC_ReactProject.Core", "SC_ReactProject.Core\SC_ReactProject.Core.csproj", "{8A231678-BD5B-4EF2-A5E8-6861B91919C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SC_ReactProject.Core.Tests", "SC_ReactProject.Core.Tests\SC_ReactProject.Core.Tests.csproj", "{EBB97501-E711-485D-B852-97652C2ABB8C}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EC58B65-5643-44F4-BE7D-77A6B7083EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC58B65-5643-44F4-BE7D-77A6B7083EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC58B65-5643-44F4-BE7D-77A6B7083EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC58B65-5643-44F4-BE7D-77A6B7083EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A231678-BD5B-4EF2-A5E8-6861B91919C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A231678-BD5B-4EF2-A5E8-6861B91919C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A231678-BD5B-4EF2-A5E8-6861B91919C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A231678-BD5B-4EF2-A5E8-6861B91919C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB97501-E711-485D-B852-97652C2ABB8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB97501-E711-485D-B852-97652C2ABB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB97501-E711-485D-B852-97652C2ABB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB97501-E711-485D-B852-97652C2ABB8C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

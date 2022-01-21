@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
 import { useState } from 'react';
@@ -90,6 +90,10 @@ function EmployeesList() {
     const maxEmpNumber = 10;
     const employeesNumber = employees.length;
     const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
+
+    const redirect = () => {
+        return <Redirect to='/add'/>
+    }
 
     return(
         <div className='employee-list'>

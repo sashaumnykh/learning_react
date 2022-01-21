@@ -1,13 +1,11 @@
-﻿import React, { Component, useState, useContext } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import { Layout } from './components/Layout';
 
 //import './custom.css'
 import './styles.css'
 import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
-import { LogInContext } from './helper/Context';
 import { EditEmployee } from './components/EditEmployee';
 import AddEmployeeForm from './components/AddEmployeeForm';
 
@@ -35,20 +33,14 @@ export default function App() {
   const isLoggedIn = sessionStorage.getItem('currentUserIsLoggedIn');
 
   return (
-    <BrowserRouter>
-        <Switch>
-          <Route path="/employee/:id">
-            <EditEmployee />
-          </Route>
-          <Route path="/add">
-            <AddEmployeeForm />
-          </Route>
-          <Route path="/">
+      <div>
+          <Route path="/employee/:id" component={EditEmployee} />
+          <Route path="/add" component={AddEmployeeForm} />
+          <Route exact path="/" >
             {isLoggedIn 
             ? ( <div><EmployeesList /></div>) 
             : <LogInForm login={login} />}
           </Route>
-        </Switch>
-    </BrowserRouter>
+      </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import EmployeesList from './EmployeesList';
+import { isLoggedInRequest } from '../helper/Consts';
 
 function AddEmployeeForm() {
     const [newUser, setNewUser] = useState({
@@ -11,7 +11,7 @@ function AddEmployeeForm() {
         lastModified: '' 
     });
     const history = useHistory();
-    const isLoggedIn = sessionStorage.getItem('currentUserIsLoggedIn');
+    const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const submitHandler = () => {
 

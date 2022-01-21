@@ -8,6 +8,12 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
 {
     public class EmployeeService : IEmployeeService
     {
+        private IRepository<Employee> _employeeRepo;
+
+        public EmployeeService(IRepository<Employee> employeeRepo)
+        {
+            _employeeRepo = employeeRepo;
+        }
         public void Create(EmployeeDTO employeeDTO)
         {
             throw new NotImplementedException();
@@ -30,7 +36,14 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
 
         public IEnumerable<EmployeeDTO> GetAll()
         {
-            throw new NotImplementedException();
+            var rng = new Random();
+            return Enumerable.Range(1, 5).Select(index => new EmployeeDTO
+            {
+                Name = rng.Next(-20, 55).ToString(),
+                Email = rng.Next(-20, 55).ToString(),
+                Salary = rng.Next(-20, 55).ToString()
+            })
+            .ToArray();
         }
 
         public void Update(EmployeeDTO employeeDTO)
