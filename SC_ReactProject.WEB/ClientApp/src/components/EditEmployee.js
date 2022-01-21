@@ -1,12 +1,23 @@
 import React, { useState, useContext } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { Link } from 'react-router-dom';
-import { isLoggedInRequest } from '../helper/Consts';
+import { isLoggedInRequest, employeesRequest } from '../helper/Consts';
 
 export function EditEmployee(props) {
     const history = useHistory();
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
     let { id } = useParams();
+    id = 1;
+
+    const employees = JSON.parse(sessionStorage.getItem(employeesRequest));
+
+    const testEmployee = {
+        name: 'test',
+        email: 'test@mail.ru',
+        salary: 1000,
+        birthday: '17.02.2000'
+    };
+    const employee = employees ? employees[id] : testEmployee;
 
     const [newUser, setNewUser] = useState({
         name: '',
@@ -15,49 +26,44 @@ export function EditEmployee(props) {
         salary: null,
         lastModified: '' 
     });
-    const employees = JSON.parse(localStorage.getItem('employees'));
 
     const saveButtonHandler = () => {
         // api call
         history.push('/');
     };
 
-    if (!isLoggedIn) {
+    /* if (!isLoggedIn) {
         history.push('/');
         return(
             null
         );
     }
+    */
 
     return(
-        <form className='form-outer'>
-            <div>
-                <Link to="/"> Back</Link>
-                <br/><br/>
-                Employee {id}
-            </div>
-            <div className='form-inner'>
+        <form className='f-out'>
+            <div className='f-in'>
                 <h1>Edit:</h1>
                 <div>
                     <label hrmlFor="employeeName">Name:</label>
                     <input onChange={e => setNewUser({...newUser, name: e.target.value})} 
-                            value={newUser.name} />
+                            value={employee.name} />
                 </div>
                 <div>
-                    <label hrmlFor="employeeName">Email:</label>
+                    <label hrmlFor="employeeEmail">Email:</label>
                     <input onChange={e => setNewUser({...newUser, email: e.target.value})} 
-                            value={newUser.email} />
+                            value={employee.email} />
                 </div>
                 <div>
-                    <label hrmlFor="employeeName">Birthday:</label>
+                    <label hrmlFor="employeeBirthday">Birthday:</label>
                     <input type="date" 
                             onChange={e => setNewUser({...newUser, birthday: e.target.value})} 
-                            value={newUser.birthday} />
+                            value={employee.birthday} />
                 </div>
                 <div>
-                    <label hrmlFor="employeeName">Salary:</label>
+                    <label hrmlFor="employeeSalary">Salary:</label>
                     <input onChange={e => setNewUser({...newUser, salary: e.target.value})} 
-                            value={newUser.salary} />
+                            value={employee.salary} />
                 </div>
                 <button onClick={saveButtonHandler}>Save</button>
             </div>
