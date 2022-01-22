@@ -1,2 +1,2 @@
-export const isLoggedInRequest = 'currntUserIsLoggedIn';
+export const isLoggedInRequest = 'currentUserIsLoggedIn';
 export const employeesRequest = 'employees';

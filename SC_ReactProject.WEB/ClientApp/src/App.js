@@ -8,6 +8,7 @@ import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
 import { EditEmployee } from './components/EditEmployee';
 import AddEmployeeForm from './components/AddEmployeeForm';
+import { isLoggedInRequest, employeesRequest } from './helper/Consts';
 
 export default function App() {
 
@@ -26,11 +27,11 @@ export default function App() {
             email: details.email,
             password: details.password
         });
-        sessionStorage.setItem('currentUserIsLoggedIn', true);
+        sessionStorage.setItem(isLoggedInRequest, true);
     }
   }
 
-  const isLoggedIn = sessionStorage.getItem('currentUserIsLoggedIn');
+  const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
   return (
       <div>
