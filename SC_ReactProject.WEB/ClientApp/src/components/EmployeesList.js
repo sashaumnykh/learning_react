@@ -3,11 +3,13 @@ import { useHistory, Redirect } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
 import { useState } from 'react';
+import { employeesRequest } from '../helper/Consts';
 import '../styles.css';
 
 function EmployeesList() {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const history = useHistory();
+    const request = employeesRequest;
 
     const getEmployeesList = number => {
         const employees = [];
@@ -19,11 +21,12 @@ function EmployeesList() {
                     name: num,
                     email: num + "@mail.ru",
                     salary: i,
-                    bday: num,
+                    bday: "2018-07-22",
                 }
             );
         }
-        return employees;
+        sessionStorage.setItem(request, JSON.stringify(employees));
+        //return employees;
     };
 
     const renderEmployeesTable = employees => {
@@ -83,10 +86,11 @@ function EmployeesList() {
         return(buttons);
     };
 
-    let employees = getEmployeesList(20);
+    getEmployeesList(20);
+    
     // employees = fetch("/employees");
+    const employees = JSON.parse(sessionStorage.getItem(request));
     let contents = renderEmployeesTable(employees);
-
     const maxEmpNumber = 10;
     const employeesNumber = employees.length;
     const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
@@ -94,6 +98,8 @@ function EmployeesList() {
     const redirect = () => {
         return <Redirect to='/add'/>
     }
+
+    console.log(sessionStorage.getItem(request));
 
     return(
         <div className='employee-list'>
