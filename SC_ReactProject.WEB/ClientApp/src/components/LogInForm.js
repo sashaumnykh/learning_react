@@ -10,8 +10,8 @@ function LogInForm({login}) {
     }
 
     return(
-        <form onSubmit={submitHandler}>
-            <div className="form-inner">
+        <form className='f-out' onSubmit={submitHandler}>
+            <div className="f-in">
                 <h2>Login</h2>
                 <div className="form-group">
                     <label htmlFor="email">email:</label>
