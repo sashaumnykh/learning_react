@@ -12,9 +12,15 @@ namespace SC_ReactProject.Core.Database
         private Context db;
         private EmployeeRepository employeeRepository;
 
-        public EFUnitOfWork(string connectionString)
+        // public EFUnitOfWork(string connectionString)
+        // {
+        //     db = new Context(connectionString);
+        // }
+
+
+        public EFUnitOfWork(Context context)
         {
-            db = new Context(connectionString);
+            db = context;
         }
         public IRepository<Employee> Employees
         {

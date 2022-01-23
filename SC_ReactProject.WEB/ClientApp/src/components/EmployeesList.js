@@ -2,55 +2,29 @@ import React from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { employeesRequest } from '../helper/Consts';
 import '../styles.css';
+import axios from 'axios';
 
 function EmployeesList() {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const history = useHistory();
     const request = employeesRequest;
 
-    const getEmployeesList = number => {
-        const employees = [];
-        for (let i = 0; i < number; i++ ) {
-            const num = i.toString();
-            employees.push(
-                {
-                    id: i,
-                    name: num,
-                    email: num + "@mail.ru",
-                    salary: i,
-                    bday: "2018-07-22",
-                }
-            );
-        }
-        sessionStorage.setItem(request, JSON.stringify(employees));
-        //return employees;
-    };
+    const [employees, setEmployees] = useState([]);
+    
+    useEffect(()=>{
+        axios('/getall')
+          .then(res => {
+              setEmployees(res.data);
+            console.log(res.data)});
+       }, []);
+    sessionStorage.setItem(request, JSON.stringify(employees));
 
-    const renderEmployeesTable = employees => {
-        const final = [];
-        for (let i = (currentPageNumber - 1) * 10; i < currentPageNumber * 10; i++){
-            const employee = employees[i];
-            final.push(
-                <tr hey={employee.name}>
-                        <td>{employee.name}</td>
-                        <td>{employee.email}</td>
-                        <td>{employee.bday}</td>
-                        <td>{employee.salary}</td>
-                        <td>{employee.lastModified}</td>
-                        <td>
-                            <EditEmployeeButton id={i}/>
-                        </td>
-                        <td>{
-                            <button>
-                                Delete
-                            </button>
-                        }</td>
-                    </tr>
-            );
-        }
+    const renderEmployeesTable = () => {
+        console.log('employees:' + employees);
+        
         return(
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
@@ -64,7 +38,27 @@ function EmployeesList() {
                     <th></th>
                 </thead>
                 <tbody>
-                    {final}
+                    {
+                        employees.map(employee => 
+                            (
+                            <tr hey={employee.name}>
+                                <td>{employee.name}</td>
+                                <td>{employee.email}</td>
+                                <td>{employee.bday}</td>
+                                <td>{employee.salary}</td>
+                                <td>{employee.lastModified}</td>
+                                <td>
+                                    <EditEmployeeButton id={employee.employeeId}/>
+                                </td>
+                                <td>{
+                                    <button>
+                                        Delete
+                                    </button>
+                                }</td>
+                            </tr>
+                            )
+                        )
+                    }
                 </tbody>
             </table>
             </div>
@@ -86,11 +80,7 @@ function EmployeesList() {
         return(buttons);
     };
 
-    getEmployeesList(20);
-    
-    // employees = fetch("/employees");
-    const employees = JSON.parse(sessionStorage.getItem(request));
-    let contents = renderEmployeesTable(employees);
+    let contents = renderEmployeesTable();
     const maxEmpNumber = 10;
     const employeesNumber = employees.length;
     const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
@@ -98,8 +88,6 @@ function EmployeesList() {
     const redirect = () => {
         return <Redirect to='/add'/>
     }
-
-    console.log(sessionStorage.getItem(request));
 
     return(
         <div className='employee-list'>

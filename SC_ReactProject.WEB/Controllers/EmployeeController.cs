@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SC_ReactProject.Core.EmployeeModule.Services;
 using SC_ReactProject.WEB.Models;
+using SC_ReactProject.Core.EmployeeModule;
 
 namespace SC_ReactProject.WEB.Controllers
 {
@@ -20,9 +21,9 @@ namespace SC_ReactProject.WEB.Controllers
 
         [HttpGet]
         [Route("/getall")]
-        public IEnumerable<EmployeeVM> GetAll()
+        public IEnumerable<Employee> GetAll()
         {
-            return _employeeService.GetAll() as IEnumerable<EmployeeVM>;
+            return _employeeService.GetAll();
         }
 
         [HttpGet]

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using SC_ReactProject.Core.Database;
 using SC_ReactProject.Core.EmployeeModule.Services;
 using SC_ReactProject.Core.EmployeeModule;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace SC_ReactProject.WEB
 {
@@ -32,14 +32,14 @@ namespace SC_ReactProject.WEB
                 configuration.RootPath = "ClientApp/build";
             });
 
-            //string connection = Configuration.GetConnectionString("DefaultConnection");
-            //services.AddDbContext<Context>(options => options.UseSqlServer(connection).EnableSensitiveDataLogging(), ServiceLifetime.Singleton);
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<Context>(options => options.UseSqlServer(connection).EnableSensitiveDataLogging(), ServiceLifetime.Singleton);
 
-            /*
+            
             services.AddSingleton<IUnitOfWork, EFUnitOfWork>();
             services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
             services.AddSingleton<IEmployeeService, EmployeeService>();
-            */
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

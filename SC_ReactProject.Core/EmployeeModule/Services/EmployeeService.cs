@@ -34,16 +34,9 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<EmployeeDTO> GetAll()
+        public IEnumerable<Employee> GetAll()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new EmployeeDTO
-            {
-                Name = rng.Next(-20, 55).ToString(),
-                Email = rng.Next(-20, 55).ToString(),
-                Salary = rng.Next(-20, 55).ToString()
-            })
-            .ToArray();
+            return _employeeRepo.GetAll();
         }
 
         public void Update(EmployeeDTO employeeDTO)
