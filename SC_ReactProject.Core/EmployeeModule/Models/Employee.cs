@@ -7,11 +7,19 @@ namespace SC_ReactProject.Core.EmployeeModule
 {
     public class Employee
     {
-        public int EmployeeId { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string BDay { get; set; }
-        public string Salary { get; set; }
-        public string LastModifiedDate { get; set; }
+        public Employee(int employeeId, string name, string email, string salary, string bday)
+        {
+            this.employeeId = employeeId;
+            this.name = name;
+            this.email = email;
+            this.salary = salary;
+            this.bday = bday;
+        }
+        public int employeeId { get; set; }
+        public string name { get; set; }
+        public string email { get; set; }
+        public string bday { get; set; }
+        public string salary { get; set; }
+        public string lastModified { get; set; }
     }
 }

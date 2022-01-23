@@ -16,9 +16,11 @@ namespace SC_ReactProject.Core.EmployeeModule
             this.db = db;
         }
 
-        public void Create(Employee employee)
+        public int Create(Employee employee)
         {
             db.Employees.Add(employee);
+            db.SaveChanges();
+            return employee.employeeId;
         }
 
         public void Delete(int id)
@@ -28,6 +30,7 @@ namespace SC_ReactProject.Core.EmployeeModule
             {
                 db.Employees.Remove(employee);
             }
+            db.SaveChanges();
         }
 
         public Employee Get(int id)
@@ -42,8 +45,11 @@ namespace SC_ReactProject.Core.EmployeeModule
 
         public void Update(Employee employee)
         {
-            Employee emp = db.Employees.Find(employee.EmployeeId);
-            emp = employee;
+            Employee emp = db.Employees.Find(employee.employeeId);
+            emp.name = employee.name;
+            emp.bday = employee.bday;
+            emp.salary = employee.salary;
+            db.SaveChanges();
         }
     }
 }

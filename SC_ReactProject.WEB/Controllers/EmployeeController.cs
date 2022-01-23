@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SC_ReactProject.Core.EmployeeModule.Services;
 using SC_ReactProject.WEB.Models;
 using SC_ReactProject.Core.EmployeeModule;
+using Microsoft.AspNetCore.Http;
 
 namespace SC_ReactProject.WEB.Controllers
 {
@@ -19,26 +20,83 @@ namespace SC_ReactProject.WEB.Controllers
             _employeeService = employeeService;
         }
 
-        [HttpGet]
-        [Route("/getall")]
-        public IEnumerable<Employee> GetAll()
+        public EmployeeVM FromDTO(EmployeeDTO dto)
         {
-            return _employeeService.GetAll();
+            return new EmployeeVM(
+                employeeId: dto.employeeId,
+                name: dto.name,
+                email: dto.email,
+                salary: dto.salary,
+                bday: dto.bday
+            );
+        }
+
+        public EmployeeDTO ToDTO(EmployeeVM vm)
+        {
+            return new EmployeeDTO(
+                employeeId: vm.employeeId,
+                name: vm.name,
+                email: vm.email,
+                salary: vm.salary,
+                bday: vm.bday
+            );
         }
 
         [HttpGet]
-        [Route("/get")]
-        public IEnumerable<EmployeeVM> Get()
+        [Route("/getall")]
+        public IEnumerable<EmployeeVM> GetAll()
         {
-            Console.WriteLine("in method");
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new EmployeeVM
+            IEnumerable<EmployeeDTO> employees = _employeeService.GetAll();
+            List<EmployeeVM> result = new List<EmployeeVM>();
+            foreach (EmployeeDTO employee in employees)
             {
-                name = rng.Next(-20, 55).ToString(),
-                email = rng.Next(-20, 55).ToString(),
-                salary = rng.Next(-20, 55).ToString()
-            })
-            .ToArray();
+                result.Add(FromDTO(employee));
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("/get/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetById(int id)
+        {
+            EmployeeVM emp = null;
+            var employee = _employeeService.Get(id);
+            emp = FromDTO(employee);
+            return Ok(emp);
+        }
+
+        [HttpPost]
+        [Route("/employee/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult Create([FromBody] EmployeeVM toCreate)
+        {
+            int? id = null;
+
+            var employee = ToDTO(toCreate);
+            id = _employeeService.Create(employee);
+            return Ok(id);
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult Update(EmployeeVM employee)
+        {
+            EmployeeDTO emp = ToDTO(employee);
+            _employeeService.Update(emp);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult Delete(int id)
+        {
+            _employeeService.Delete(id);
+            return Ok();
         }
     }
 }

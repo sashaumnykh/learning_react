@@ -8,7 +8,7 @@ namespace SC_ReactProject.Core.EmployeeModule
 {
     public interface IRepository<T>
     {
-        void Create(T entity);
+        int Create(T entity);
         T Get(int id);
         IEnumerable<T> GetAll();
         void Delete(int id);

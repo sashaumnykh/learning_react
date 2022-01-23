@@ -29,17 +29,17 @@ namespace SC_ReactProject.Core.Database
         {
             modelBuilder.Entity<Employee>().HasData(new
             {
-                EmployeeId = 1,
-                Name = "Kurt Vonnegut",
-                Email = "vonnegut@yahoo.com",
-                Salary = "1000"
+                employeeId = 1,
+                name = "Kurt Vonnegut",
+                email = "vonnegut@yahoo.com",
+                salary = "1000"
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
-                EmployeeId = 2,
-                Name = "Ernest Hemingway",
-                Email = "ernest@yahoo.com",
-                Salary = "2000"
+                employeeId = 2,
+                name = "Ernest Hemingway",
+                email = "ernest@yahoo.com",
+                salary = "2000"
             });
             Console.WriteLine("objects have been created");
         }

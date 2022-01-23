@@ -35,11 +35,10 @@ namespace SC_ReactProject.WEB
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<Context>(options => options.UseSqlServer(connection).EnableSensitiveDataLogging(), ServiceLifetime.Singleton);
 
-            
             services.AddSingleton<IUnitOfWork, EFUnitOfWork>();
             services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
             services.AddSingleton<IEmployeeService, EmployeeService>();
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
