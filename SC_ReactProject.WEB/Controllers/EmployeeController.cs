@@ -81,6 +81,7 @@ namespace SC_ReactProject.WEB.Controllers
         }
 
         [HttpPut]
+        [Route("/employee/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Update(EmployeeVM employee)
@@ -91,6 +92,7 @@ namespace SC_ReactProject.WEB.Controllers
         }
 
         [HttpDelete]
+        [Route("/delete/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(int id)

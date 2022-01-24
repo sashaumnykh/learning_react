@@ -14,10 +14,6 @@ function AddEmployeeForm() {
     const history = useHistory();
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
-    const submitHandler = () => {
-
-    };
-
     const addButtonHandler = () => {
         axios.post('/employee/', newUser)
           .then(function (response) {
@@ -26,7 +22,6 @@ function AddEmployeeForm() {
           .catch(function (error) {
             console.log(error);
           });
-        // post method with adding new employee;
         history.push('/');
     };
     
@@ -38,7 +33,7 @@ function AddEmployeeForm() {
     // }
     
     return(
-        <form className='f-out' onSubmit={submitHandler}>
+        <form className='f-out'>
             <div className='f-in'>
                 <h1>Add an employee:</h1>
                 <div>

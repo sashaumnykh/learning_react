@@ -1,34 +1,27 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
-import { Link } from 'react-router-dom';
-import { isLoggedInRequest, employeesRequest } from '../helper/Consts';
+import { isLoggedInRequest } from '../helper/Consts';
+import axios from 'axios';
 
 export function EditEmployee(props) {
+    const [employee, setEmployee] = useState({});
+    let { id } = useParams();
+    useEffect(()=>{
+        axios('/get/' + id)
+          .then(res => {
+              setEmployee(res.data);
+            console.log(res.data)});
+       }, []);
+    
     const history = useHistory();
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
-    let { id } = useParams();
-    const request = employeesRequest;
-
-    const employees = JSON.parse(sessionStorage.getItem(request));
-    console.log(employees);
-
-
-    const testEmployee = {
-        name: 'test',
-        email: 'test@mail.ru',
-        salary: 1000,
-        birthday: '17.02.2000'
-    };
-    //const employee = employees ? employees[id] : testEmployee;
-
-    const [employee, setEmployee] = useState(employees[id]);
 
     const saveButtonHandler = () => {
-        // api call
-        const updatedEmployees = [...employees];
-        updatedEmployees[id] = employee;
-        sessionStorage.setItem(request, updatedEmployees);
-        console.log(JSON.parse(sessionStorage.getItem(request)));
+        axios({
+            method: 'put',
+            url: '/employee/' + id,
+            data: employee
+          });
         history.push('/');
     };
 
