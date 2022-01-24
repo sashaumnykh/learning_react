@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { isLoggedInRequest } from '../helper/Consts';
+import axios from 'axios';
 
 function AddEmployeeForm() {
     const [newUser, setNewUser] = useState({
@@ -18,6 +19,13 @@ function AddEmployeeForm() {
     };
 
     const addButtonHandler = () => {
+        axios.post('/employee/', newUser)
+          .then(function (response) {
+            console.log('add employee: ' + response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
         // post method with adding new employee;
         history.push('/');
     };
