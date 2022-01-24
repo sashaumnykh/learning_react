@@ -12,13 +12,35 @@ function EmployeesList() {
     const history = useHistory();
 
     const [employees, setEmployees] = useState([]);
+    const [sortOrder, setSortOrder] = useState('default');
     
     useEffect(()=>{
         axios('/getall')
           .then(res => {
               setEmployees(res.data);
-            console.log(res.data)});
+            console.log(res.data)})
+            .catch(error => console.log(error));
        }, []);
+
+    const onSort = (event, sortKey, sortOrder) => {
+        const data = [...employees];
+        switch(sortOrder) {
+            case 'default': {
+                break;
+            }
+            case 'asc': {
+                data.sort((a,b) => a[sortKey].localeCompare(b[sortKey]));
+                setEmployees(data);
+                break;
+            }
+            case 'desc': {
+                data.sort((a,b) => -a[sortKey].localeCompare(b[sortKey]));
+                setEmployees(data);
+                break;
+            }
+        }
+        setEmployees(data);
+    }
 
     const renderEmployeesTable = () => {
         let emps = employees.map(employee => 
@@ -39,15 +61,47 @@ function EmployeesList() {
             )
         );
 
+        const changeSortOrder = () => {
+            switch(sortOrder) {
+                case 'default': {
+                    setSortOrder('asc');
+                    break;
+                }
+                case 'asc': {
+                    setSortOrder('desc');
+                    break;
+                }
+                case 'desc': {
+                    setSortOrder('default');
+                    break;
+                }
+            }
+        }
+
         return(
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Birthday</th>
-                    <th>Salary</th>
-                    <th>Last modified date</th>
+                    <th onClick={e => {
+                        changeSortOrder();
+                        onSort(e, 'name', sortOrder);
+                    }}>Name</th>
+                    <th onClick={e => {
+                        changeSortOrder();
+                        onSort(e, 'email', sortOrder);
+                    }}>Email</th>
+                    <th onClick={e => {
+                        changeSortOrder();
+                        onSort(e, 'bday', sortOrder);
+                    }}>Birthday</th>
+                    <th onClick={e => {
+                        changeSortOrder();
+                        onSort(e, 'salary', sortOrder);
+                    }}>Salary</th>
+                    <th onClick={e => {
+                        changeSortOrder();
+                        onSort(e, 'lastModified', sortOrder);
+                    }}>Last modified date</th>
                     <th></th>
                     <th></th>
                 </thead>
