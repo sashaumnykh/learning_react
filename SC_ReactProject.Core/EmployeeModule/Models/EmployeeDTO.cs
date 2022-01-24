@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace SC_ReactProject.Core.EmployeeModule
 {
@@ -15,8 +16,10 @@ namespace SC_ReactProject.Core.EmployeeModule
             this.salary = salary;
             this.bday = bday;
         }
+        [Key]
         public int employeeId { get; set; }
         public string name { get; set; }
+        [EmailAddress]
         public string email { get; set; }
         public string bday { get; set; }
         public string salary { get; set; }

@@ -23,8 +23,28 @@ function EmployeesList() {
     sessionStorage.setItem(request, JSON.stringify(employees));
 
     const renderEmployeesTable = () => {
-        console.log('employees:' + employees);
-        
+        let final = [];
+        console.log('len: ' + Object.keys(employees).length);
+        let emps = employees.map(employee => 
+            (
+            <tr hey={employee.name}>
+                <td>{employee.name}</td>
+                <td>{employee.email}</td>
+                <td>{employee.bday}</td>
+                <td>{employee.salary}</td>
+                <td>{employee.lastModified}</td>
+                <td>
+                    <EditEmployeeButton id={employee.employeeId}/>
+                </td>
+                <td>{
+                    <button>
+                        Delete
+                    </button>
+                }</td>
+            </tr>
+            )
+        );
+        console.log("emps: " + emps);
         return(
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
@@ -39,25 +59,7 @@ function EmployeesList() {
                 </thead>
                 <tbody>
                     {
-                        employees.map(employee => 
-                            (
-                            <tr hey={employee.name}>
-                                <td>{employee.name}</td>
-                                <td>{employee.email}</td>
-                                <td>{employee.bday}</td>
-                                <td>{employee.salary}</td>
-                                <td>{employee.lastModified}</td>
-                                <td>
-                                    <EditEmployeeButton id={employee.employeeId}/>
-                                </td>
-                                <td>{
-                                    <button>
-                                        Delete
-                                    </button>
-                                }</td>
-                            </tr>
-                            )
-                        )
+                        emps.slice((currentPageNumber - 1) * 10, currentPageNumber * 10)
                     }
                 </tbody>
             </table>
@@ -70,6 +72,7 @@ function EmployeesList() {
     };
 
     const renderPagesButtons = pagesNumber => {
+        debugger;
         const buttons = [];
         for (let i = 0; i < pagesNumber; i++){
             let number = i + 1;
@@ -80,10 +83,11 @@ function EmployeesList() {
         return(buttons);
     };
 
-    let contents = renderEmployeesTable();
+    debugger;
     const maxEmpNumber = 10;
-    const employeesNumber = employees.length;
-    const pagesNumber = Math.floor(employeesNumber / maxEmpNumber);
+    const employeesNumber = Object.keys(employees).length;
+    const pagesNumber = Math.ceil(employeesNumber / maxEmpNumber);
+    let contents = renderEmployeesTable();
 
     const redirect = () => {
         return <Redirect to='/add'/>
