@@ -27,7 +27,8 @@ namespace SC_ReactProject.WEB.Controllers
                 name: dto.name,
                 email: dto.email,
                 salary: dto.salary,
-                bday: dto.bday
+                bday: dto.bday,
+                lastModified: dto.lastModified
             );
         }
 
@@ -38,7 +39,8 @@ namespace SC_ReactProject.WEB.Controllers
                 name: vm.name,
                 email: vm.email,
                 salary: vm.salary,
-                bday: vm.bday
+                bday: vm.bday,
+                lastModified: vm.lastModified
             );
         }
 

@@ -4,13 +4,14 @@ namespace SC_ReactProject.WEB.Models
 {
     public class EmployeeVM
     {
-        public EmployeeVM(int employeeId, string name, string email, string salary, string bday)
+        public EmployeeVM(int employeeId, string name, string email, string salary, string bday, string lastModified)
         {
             this.employeeId = employeeId;
             this.name = name;
             this.email = email;
             this.salary = salary;
             this.bday = bday;
+            this.lastModified = lastModified;
         }
         [Key]
         public int employeeId { get; set; }

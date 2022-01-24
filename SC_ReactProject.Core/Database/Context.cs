@@ -27,13 +27,15 @@ namespace SC_ReactProject.Core.Database
 
         public void GetEmployees(ModelBuilder modelBuilder)
         {
+            var today = DateTime.Today.ToString();
             modelBuilder.Entity<Employee>().HasData(new
             {
                 employeeId = 1,
                 name = "Kurt Vonnegut",
                 email = "vonnegut@yahoo.com",
                 salary = "1000",
-                bday = "1922-11-11"
+                bday = "1922-11-11",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {

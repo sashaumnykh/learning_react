@@ -4,7 +4,13 @@ import { isLoggedInRequest } from '../helper/Consts';
 import axios from 'axios';
 
 export function EditEmployee(props) {
-    const [employee, setEmployee] = useState({});
+    const [employee, setEmployee] = useState({
+        name: '',
+        email: '',
+        birthday: '',
+        salary: null,
+        lastModified: ''
+    });
     let { id } = useParams();
     useEffect(()=>{
         axios('/get/' + id)
@@ -17,12 +23,33 @@ export function EditEmployee(props) {
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const saveButtonHandler = () => {
+        {
+        /*
+        let currentDate = new Date();
+        let cDay = currentDate.getDate();
+        let cMonth = currentDate.getMonth() + 1;
+        let cYear = currentDate.getFullYear();
+        console.log("<b>" + cDay + "/" + cMonth + "/" + cYear + "</b>");
+        console.log(typeof(employee.bday));
+        console.log(new Date(employee.bday));
+        */}
+        let now = new Date().toString();
+        setEmployee(employee => ({
+            ...employee,
+            lastModified: now
+         }));
+        debugger;
         axios({
             method: 'put',
             url: '/employee/' + id,
-            data: employee
+            data: employee,
+          }).then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
           });
-        history.push('/');
+        history.push('/')
     };
 
     if (!isLoggedIn) {
@@ -38,30 +65,29 @@ export function EditEmployee(props) {
                 <h1>Edit:</h1>
                 <div>
                     <label hrmlFor="employeeName">Name:</label>
-                    <input onChange={e => setEmployee({...employee, name: e.target.value})} 
+                    <input onChange={e => setEmployee({...employee, name: e.target.value, lastModified: new Date().toString()})} 
                             value={employee.name} />
                 </div>
                 <div>
                     <label hrmlFor="employeeEmail">Email:</label>
-                    <input onChange={e => setEmployee({...employee, email: e.target.value})} 
+                    <input onChange={e => setEmployee({...employee, email: e.target.value, lastModified: new Date().toString()})} 
                             value={employee.email} />
                 </div>
                 <div>
                     <label hrmlFor="employeeBirthday">Birthday:</label>
                     <input type="date" 
-                            onChange={e => setEmployee({...employee, bday: e.target.value})} 
+                            onChange={e => setEmployee({...employee, bday: e.target.value, lastModified: new Date().toString()})} 
                             value={employee.bday} />
                 </div>
                 <div>
                     <label hrmlFor="employeeSalary">Salary:</label>
-                    <input onChange={e => setEmployee({...employee, salary: e.target.value})} 
+                    <input onChange={e => setEmployee({...employee, salary: e.target.value, lastModified: new Date().toString()})} 
                             value={employee.salary} />
                 </div>
                 <div className='buttons'>
                     <button onClick={saveButtonHandler}>Save</button>
                     <button onClick={() => {history.push('/')}}>Cancel</button>
                 </div>
-                
             </div>
         </form>
         

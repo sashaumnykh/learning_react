@@ -17,7 +17,8 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
                 name: dto.name,
                 email: dto.email,
                 salary: dto.salary,
-                bday: dto.bday
+                bday: dto.bday,
+                lastModified: dto.lastModified
             );
         }
         public EmployeeDTO ToDTO(Employee employee)
@@ -28,7 +29,8 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
                 name: employee.name,
                 email: employee.email,
                 bday: employee.bday,
-                salary: employee.salary
+                salary: employee.salary,
+                lastModified: employee.lastModified
             );
         }
         public EmployeeService(IRepository<Employee> employeeRepo)
