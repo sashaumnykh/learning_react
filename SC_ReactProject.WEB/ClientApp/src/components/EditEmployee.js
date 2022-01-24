@@ -57,7 +57,11 @@ export function EditEmployee(props) {
                     <input onChange={e => setEmployee({...employee, salary: e.target.value})} 
                             value={employee.salary} />
                 </div>
-                <button onClick={saveButtonHandler}>Save</button>
+                <div className='buttons'>
+                    <button onClick={saveButtonHandler}>Save</button>
+                    <button onClick={() => {history.push('/')}}>Cancel</button>
+                </div>
+                
             </div>
         </form>
         
