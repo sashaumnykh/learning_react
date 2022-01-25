@@ -49,6 +49,7 @@ namespace SC_ReactProject.Core.EmployeeModule
             emp.name = employee.name;
             emp.bday = employee.bday;
             emp.salary = employee.salary;
+            emp.lastModified = employee.lastModified;
             db.SaveChanges();
         }
     }

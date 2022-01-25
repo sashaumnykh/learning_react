@@ -42,7 +42,10 @@ export function EditEmployee(props) {
         axios({
             method: 'put',
             url: '/employee/' + id,
-            data: employee,
+            data: {
+                ...employee,
+                lastModified: now
+            },
           }).then(function (response) {
             console.log(response);
           })
