@@ -16,9 +16,9 @@ function EmployeesList() {
     
     useEffect(()=>{
         axios('/getall')
-          .then(res => {
-              setEmployees(res.data);
-            console.log(res.data)})
+            .then(res => {
+                setEmployees(res.data);
+            })
             .catch(error => console.log(error));
        }, []);
 
@@ -42,6 +42,11 @@ function EmployeesList() {
         setEmployees(data);
     }
 
+    const handleLastModified = (dateString) => {
+        const utcDate = new Date(dateString);
+        return utcDate.toLocaleString();
+    }
+
     const renderEmployeesTable = () => {
         let emps = employees.map(employee => 
             (
@@ -50,7 +55,7 @@ function EmployeesList() {
                 <td>{employee.email}</td>
                 <td>{employee.bday}</td>
                 <td>{employee.salary}</td>
-                <td>{employee.lastModified}</td>
+                <td>{handleLastModified(employee.lastModified)}</td>
                 <td>
                     <EditEmployeeButton id={employee.employeeId}/>
                 </td>

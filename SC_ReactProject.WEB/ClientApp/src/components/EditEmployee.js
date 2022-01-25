@@ -23,22 +23,14 @@ export function EditEmployee(props) {
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const saveButtonHandler = () => {
-        {
-        /*
-        let currentDate = new Date();
-        let cDay = currentDate.getDate();
-        let cMonth = currentDate.getMonth() + 1;
-        let cYear = currentDate.getFullYear();
-        console.log("<b>" + cDay + "/" + cMonth + "/" + cYear + "</b>");
-        console.log(typeof(employee.bday));
-        console.log(new Date(employee.bday));
-        */}
-        let now = new Date().toString();
+
+        let now = new Date().toUTCString();
+
         setEmployee(employee => ({
             ...employee,
             lastModified: now
-         }));
-        debugger;
+        }));
+
         axios({
             method: 'put',
             url: '/employee/' + id,

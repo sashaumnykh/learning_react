@@ -27,7 +27,7 @@ namespace SC_ReactProject.Core.Database
 
         public void GetEmployees(ModelBuilder modelBuilder)
         {
-            var today = DateTime.Today.ToString();
+            var today = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             modelBuilder.Entity<Employee>().HasData(new
             {
                 employeeId = 1,
@@ -43,7 +43,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Ernest Hemingway",
                 email = "ernest@yahoo.com",
                 salary = "2000",
-                bday = "1899-07-21"
+                bday = "1899-07-21",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -51,7 +52,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Douglas Adams",
                 email = "42@yahoo.com",
                 salary = "4200",
-                bday = "1952-05-11"
+                bday = "1952-05-11",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -59,7 +61,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Donna Tartt",
                 email = "tartt@yahoo.com",
                 salary = "3000",
-                bday = "1963-12-23"
+                bday = "1963-12-23",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -67,7 +70,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Fyodor Dostoyevsky",
                 email = "dostoyevsky@yahoo.com",
                 salary = "1500",
-                bday = "1821-11-11"
+                bday = "1821-11-11",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -75,7 +79,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Viktor Pelevin",
                 email = "generation_pi@yahoo.com",
                 salary = "2500",
-                bday = "1962-11-22"
+                bday = "1962-11-22",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -83,7 +88,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Vladimir Sorokin",
                 email = "sorokin@yahoo.com",
                 salary = "2500",
-                bday = "1955-08-07"
+                bday = "1955-08-07",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -91,7 +97,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Vladimir Nabokov",
                 email = "sirin@yahoo.com",
                 salary = "3000",
-                bday = "1899-04-10"
+                bday = "1899-04-10",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -99,7 +106,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Jean-Michel Guenassia",
                 email = "jean@yahoo.com",
                 salary = "2000",
-                bday = "1950-01-01"
+                bday = "1950-01-01",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -107,7 +115,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Jerome Klapka Jerome",
                 email = "klapka@yahoo.com",
                 salary = "1000",
-                bday = "1859-05-02"
+                bday = "1859-05-02",
+                lastModified = today
             });
             modelBuilder.Entity<Employee>().HasData(new
             {
@@ -115,7 +124,8 @@ namespace SC_ReactProject.Core.Database
                 name = "Alexey Salnikov",
                 email = "petrovy@yahoo.com",
                 salary = "1500",
-                bday = "1978-08-07"
+                bday = "1978-08-07",
+                lastModified = today
             });
             Console.WriteLine("objects have been created");
         }

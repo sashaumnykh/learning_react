@@ -15,7 +15,7 @@ function AddEmployeeForm() {
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const addButtonHandler = () => {
-        newUser.lastModified = new Date().toString();
+        newUser.lastModified = new Date().toUTCString();
         axios.post('/employee/', newUser)
           .then(function (response) {
             console.log('add employee: ' + response);
