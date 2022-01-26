@@ -91,9 +91,18 @@ function AddEmployeeForm() {
     const handleSalaryInput = (e) => {
         let salary = e.target.value;
         setSalary(salary);
-        salary >= 0
-            ? setSalaryError('')
-            : setSalaryError('salary cannot be a negative number.');
+        if (salary.trim() === '') {
+            setSalaryError('field cannot be empty.')
+        }
+        else if (Number.isNaN(parseFloat(salary))) {
+            setSalaryError('salary must be a number.')
+        }
+        else if (parseFloat(salary) && parseFloat(salary) < 0) {
+            setSalaryError('salary cannot be a negative number.');
+        }
+        else {
+            setSalaryError('');
+        }
     }
 
     const handleBdayInput = (e) => {
