@@ -1,4 +1,4 @@
-import React, { Component, useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 function LogInForm({login}) {
 
@@ -30,6 +30,10 @@ function LogInForm({login}) {
                 setPasswordFieldVisited(true);
                 break;
             }
+            default: {
+                alert('sos!');
+                break;
+            }
         }
     };
 
@@ -49,7 +53,7 @@ function LogInForm({login}) {
     const handlePasswordInput = (e) => {
         let password = e.target.value;
         setPassword(password);
-        if (String(password).trim() != '') {
+        if (String(password).trim() !== '') {
             setPasswordError('');
         }
     }

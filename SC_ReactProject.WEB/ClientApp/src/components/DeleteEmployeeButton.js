@@ -1,11 +1,11 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 export function DeleteEmployeeButton(props) {
     let id = props.id;
 
-    const history = useHistory();
+    // const history = useHistory();
 
     const handleDelete = () => {
         axios.delete('/delete/' + id)

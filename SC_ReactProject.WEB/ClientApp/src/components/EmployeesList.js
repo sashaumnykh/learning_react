@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
 import { DeleteEmployeeButton } from './DeleteEmployeeButton';
@@ -36,6 +36,10 @@ function EmployeesList() {
             case 'desc': {
                 data.sort((a,b) => -a[sortKey].localeCompare(b[sortKey]));
                 setEmployees(data);
+                break;
+            }
+            default: {
+                alert('sos!')
                 break;
             }
         }
@@ -80,6 +84,10 @@ function EmployeesList() {
                     setSortOrder('default');
                     break;
                 }
+                default: {
+                    alert('sos!')
+                    break;
+                }
             }
         }
 
@@ -87,28 +95,30 @@ function EmployeesList() {
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
-                    <th onClick={e => {
-                        changeSortOrder();
-                        onSort(e, 'name', sortOrder);
-                    }}>Name</th>
-                    <th onClick={e => {
-                        changeSortOrder();
-                        onSort(e, 'email', sortOrder);
-                    }}>Email</th>
-                    <th onClick={e => {
-                        changeSortOrder();
-                        onSort(e, 'bday', sortOrder);
-                    }}>Birthday</th>
-                    <th onClick={e => {
-                        changeSortOrder();
-                        onSort(e, 'salary', sortOrder);
-                    }}>Salary</th>
-                    <th onClick={e => {
-                        changeSortOrder();
-                        onSort(e, 'lastModified', sortOrder);
-                    }}>Last modified date</th>
-                    <th></th>
-                    <th></th>
+                    <tr>
+                        <th onClick={e => {
+                            changeSortOrder();
+                            onSort(e, 'name', sortOrder);
+                        }}>Name</th>
+                        <th onClick={e => {
+                            changeSortOrder();
+                            onSort(e, 'email', sortOrder);
+                        }}>Email</th>
+                        <th onClick={e => {
+                            changeSortOrder();
+                            onSort(e, 'bday', sortOrder);
+                        }}>Birthday</th>
+                        <th onClick={e => {
+                            changeSortOrder();
+                            onSort(e, 'salary', sortOrder);
+                        }}>Salary</th>
+                        <th onClick={e => {
+                            changeSortOrder();
+                            onSort(e, 'lastModified', sortOrder);
+                        }}>Last modified date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                     {

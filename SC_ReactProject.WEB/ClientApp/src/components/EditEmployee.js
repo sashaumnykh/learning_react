@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { isLoggedInRequest } from '../helper/Consts';
 import axios from 'axios';
+// import { useForm } from "react-hook-form";
 
 export function EditEmployee(props) {
     const [employee, setEmployee] = useState({
@@ -15,10 +16,11 @@ export function EditEmployee(props) {
     useEffect(()=>{
         axios('/get/' + id)
           .then(res => {
-              setEmployee(res.data);
-            console.log(res.data)});
-       }, []);
-    
+            setEmployee(res.data);
+            console.log(res.data)}
+          );
+    //    }, []);
+    });
     const history = useHistory();
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 

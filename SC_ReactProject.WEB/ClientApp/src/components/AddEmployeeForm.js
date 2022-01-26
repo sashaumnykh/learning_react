@@ -1,18 +1,18 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { isLoggedInRequest } from '../helper/Consts';
+// import { isLoggedInRequest } from '../helper/Consts';
 import axios from 'axios';
 
 function AddEmployeeForm() {
-    const [newUser, setNewUser] = useState({
-        name: '',
-        email: '',
-        birthday: '',
-        salary: null,
-        lastModified: '' 
-    });
+    // const [newUser, setNewUser] = useState({
+    //     name: '',
+    //     email: '',
+    //     birthday: '',
+    //     salary: null,
+    //     lastModified: '' 
+    // });
     const history = useHistory();
-    const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
+    // const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const [name, setName] = useState('');
     const [nameError, setNameError] = useState('field cannot be empty.');
@@ -51,6 +51,10 @@ function AddEmployeeForm() {
                 setBdayFieldVisited(true);
                 break;
             }
+            default: {
+                alert('sos!')
+                break;
+            }
         }
     };
 
@@ -74,7 +78,7 @@ function AddEmployeeForm() {
     const handleNameInput = (e) => {
         let name = e.target.value;
         setName(name);
-        String(name).trim() != ''
+        String(name).trim() !== ''
             ? setNameError('')
             : setNameError('name cannot be empty.');
     }
