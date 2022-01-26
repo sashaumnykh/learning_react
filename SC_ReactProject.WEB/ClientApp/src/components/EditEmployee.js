@@ -22,8 +22,83 @@ export function EditEmployee(props) {
     const history = useHistory();
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
-    const saveButtonHandler = () => {
+    const [nameError, setNameError] = useState('');
+    const [nameFieldVisited, setNameFieldVisited] = useState(false);
+    const [emailError, setEmailError] = useState('');
+    const [emailFieldVisited, setEmailFieldVisited] = useState(false);
+    const [salaryError, setSalaryError] = useState('');
+    const [salaryFieldVisited, setSalaryFieldVisited] = useState(false);
+    const [bdayError, setBdayError] = useState('');
+    const [bdayFieldVisited, setBdayFieldVisited] = useState(false);
 
+    const [isInputValid, setIsInputValid] = useState(false);
+
+    useEffect( () => {
+        (nameError || emailError || salaryError || bdayError ) ? setIsInputValid(false) : setIsInputValid(true);
+    }, [nameError, emailError, salaryError, bdayError]);
+
+    const blurHandle = (e) => {
+        switch (e.target.name) {
+            case 'name': {
+                setNameFieldVisited(true);
+                break;
+            }
+            case 'email': {
+                setEmailFieldVisited(true);
+                break;
+            }
+            case 'salary': {
+                setSalaryFieldVisited(true);
+                break;
+            }
+            case 'bday': {
+                setBdayFieldVisited(true);
+                break;
+            }
+        }
+    };
+
+    const handleNameInput = (e) => {
+        let name = e.target.value;
+        setEmployee({...employee, name: e.target.value, lastModified: new Date().toString()});
+        String(name).trim() != ''
+            ? setNameError('')
+            : setNameError('name cannot be empty.');
+    }
+
+    const handleEmailInput = (e) => {
+        let email = e.target.value;
+        setEmployee({...employee, email: e.target.value, lastModified: new Date().toString()});
+        let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        regexEmail.test(String(email).toLowerCase()) 
+            ? setEmailError('')
+            : setEmailError('format is incorrect.');
+    }
+
+    const handleSalaryInput = (e) => {
+        let salary = e.target.value;
+        setEmployee({...employee, salary: e.target.value, lastModified: new Date().toString()});
+        if (salary.trim() === '') {
+            setSalaryError('field cannot be empty.')
+        }
+        else if (parseFloat(salary) === NaN) {
+            setSalaryError('salary must be a number.')
+        }
+        else if (parseFloat(salary) && parseFloat(salary) < 0) {
+            setSalaryError('salary cannot be a negative number.');
+        }
+        else {
+            setSalaryError('');
+        }
+    }
+
+    const handleBdayInput = (e) => {
+        let bday = e.target.value;
+        setEmployee({...employee, bday: e.target.value, lastModified: new Date().toString()});
+        setBdayError('');
+    }
+
+    const saveButtonHandler = () => {
         let now = new Date().toUTCString();
 
         setEmployee(employee => ({
@@ -60,27 +135,31 @@ export function EditEmployee(props) {
                 <h1>Edit:</h1>
                 <div>
                     <label hrmlFor="employeeName">Name:</label>
-                    <input onChange={e => setEmployee({...employee, name: e.target.value, lastModified: new Date().toString()})} 
+                    <input name="name" onBlur={e => blurHandle(e)} onChange={e => handleNameInput(e)} 
                             value={employee.name} />
+                    {(nameFieldVisited && nameError) && <div className='error-message'>{nameError}</div>}
                 </div>
                 <div>
                     <label hrmlFor="employeeEmail">Email:</label>
-                    <input onChange={e => setEmployee({...employee, email: e.target.value, lastModified: new Date().toString()})} 
+                    <input name="email" onBlur={e => blurHandle(e)} onChange={e => handleEmailInput(e)} 
                             value={employee.email} />
+                    {(emailFieldVisited && emailError) && <div className='error-message'>{emailError}</div>}
                 </div>
                 <div>
                     <label hrmlFor="employeeBirthday">Birthday:</label>
-                    <input type="date" 
-                            onChange={e => setEmployee({...employee, bday: e.target.value, lastModified: new Date().toString()})} 
+                    <input name="bday" type="date" onBlur={e => blurHandle(e)} 
+                            onChange={e => handleBdayInput(e)} 
                             value={employee.bday} />
+                    {(bdayFieldVisited && bdayError) && <div className='error-message'>{bdayError}</div>}
                 </div>
                 <div>
                     <label hrmlFor="employeeSalary">Salary:</label>
-                    <input onChange={e => setEmployee({...employee, salary: e.target.value, lastModified: new Date().toString()})} 
+                    <input name="salary" onBlur={e => blurHandle(e)} onChange={e => handleSalaryInput(e)} 
                             value={employee.salary} />
+                    {(salaryFieldVisited && salaryError) && <div className='error-message'>{salaryError}</div>}
                 </div>
                 <div className='buttons'>
-                    <button onClick={saveButtonHandler}>Save</button>
+                    <button disabled={!isInputValid} onClick={saveButtonHandler}>Save</button>
                     <button onClick={() => {history.push('/')}}>Cancel</button>
                 </div>
             </div>
