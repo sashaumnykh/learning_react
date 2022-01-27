@@ -49,6 +49,7 @@ export default function App() {
             ? ( <div><EmployeesList /></div>) 
             : <LogInForm login={login} />}
           </Route>
+          <Redirect to="/" />
       </div>
   );
 }
