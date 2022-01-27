@@ -3,7 +3,9 @@ import { useParams, useHistory } from "react-router-dom";
 import { isLoggedInRequest } from '../helper/Consts';
 import axios from 'axios';
 
-export function EditEmployee(props) {
+export function EditEmployee() {
+    const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
+    
     const [employee, setEmployee] = useState({
         name: '',
         email: '',
@@ -11,16 +13,21 @@ export function EditEmployee(props) {
         salary: null,
         lastModified: ''
     });
+
     let { id } = useParams();
+    const history = useHistory();
+
     useEffect(()=>{
+        if (!isLoggedIn) {
+            history.push('/');
+            return null;
+        }
         axios('/get/' + id)
           .then(res => {
               setEmployee(res.data);
-            console.log(res.data)});
+            console.log(res.data)})
+          .catch(error => console.log(error));
        }, []);
-    
-    const history = useHistory();
-    const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const [nameError, setNameError] = useState('');
     const [nameFieldVisited, setNameFieldVisited] = useState(false);
@@ -81,7 +88,7 @@ export function EditEmployee(props) {
         if (salary.trim() === '') {
             setSalaryError('field cannot be empty.')
         }
-        else if (parseFloat(salary) === NaN) {
+        else if (Number.isNaN(parseFloat(salary))) {
             setSalaryError('salary must be a number.')
         }
         else if (parseFloat(salary) && parseFloat(salary) < 0) {
@@ -119,15 +126,8 @@ export function EditEmployee(props) {
           .catch(function (error) {
             console.log(error);
           });
-        history.push('/')
-    };
-
-    if (!isLoggedIn) {
         history.push('/');
-        return(
-            null
-        );
-    }
+    };
     
     return(
         <form className='f-out'>
