@@ -4,13 +4,6 @@ import { isLoggedInRequest } from '../helper/Consts';
 import axios from 'axios';
 
 function AddEmployeeForm() {
-    const [newUser, setNewUser] = useState({
-        name: '',
-        email: '',
-        birthday: '',
-        salary: null,
-        lastModified: '' 
-    });
     const history = useHistory();
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
@@ -111,12 +104,12 @@ function AddEmployeeForm() {
         setBdayError('');
     }
     
-    // if (!isLoggedIn) {
-    //     history.push('/');
-    //     return(
-    //         null
-    //     );
-    // }
+    if (!isLoggedIn) {
+        history.push('/');
+        return(
+            null
+        );
+    }
     
     return(
         <form className='f-out' onSubmit={addButtonHandler}>
