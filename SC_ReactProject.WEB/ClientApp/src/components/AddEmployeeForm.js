@@ -140,7 +140,10 @@ function AddEmployeeForm() {
                             value={salary} />
                     {(salaryFieldVisited && salaryError) && <div className='error-message'>{salaryError}</div>}
                 </div>
-                <input type="submit" value="Add" disabled={!isInputValid}/>
+                <div className='buttons'>
+                    <input type="submit" value="Add" disabled={!isInputValid}/>
+                    <button onClick={() => {history.push('/')}}>Cancel</button>
+                </div>
             </div>
         </form>
         
