@@ -130,7 +130,7 @@ export function EditEmployee() {
     };
     
     return(
-        <form className='f-out'>
+        <form className='f-out' onSubmit={saveButtonHandler}>
             <div className='f-in'>
                 <h1>Edit:</h1>
                 <div>
@@ -159,7 +159,7 @@ export function EditEmployee() {
                     {(salaryFieldVisited && salaryError) && <div className='error-message'>{salaryError}</div>}
                 </div>
                 <div className='buttons'>
-                    <button disabled={!isInputValid} onClick={saveButtonHandler}>Save</button>
+                    <input type="submit" value="Save" disabled={!isInputValid}/>
                     <button onClick={() => {history.push('/')}}>Cancel</button>
                 </div>
             </div>
