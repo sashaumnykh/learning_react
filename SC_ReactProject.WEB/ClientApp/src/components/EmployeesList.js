@@ -43,10 +43,15 @@ function EmployeesList() {
         setEmployees(data);
     }
 
-    const handleLastModified = (dateString) => {
-        const options = {
+    const handleDateFormat = (dateString, withTime = false) => {
+        const options = withTime 
+        ? {
             year: 'numeric', month: 'numeric', day: 'numeric',
             hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour12: false
+          }
+        : {
+            year: 'numeric', month: 'numeric', day: 'numeric',
             hour12: false
           };
         const locale = sessionStorage.getItem(localeRequest);
@@ -61,9 +66,9 @@ function EmployeesList() {
             <tr hey={employee.name}>
                 <td>{employee.name}</td>
                 <td>{employee.email}</td>
-                <td>{employee.bday}</td>
+                <td>{handleDateFormat(employee.bday, false)}</td>
                 <td>{employee.salary}</td>
-                <td>{handleLastModified(employee.lastModified)}</td>
+                <td>{handleDateFormat(employee.lastModified, true)}</td>
                 <td>
                     <EditEmployeeButton id={employee.employeeId}/>
                 </td>
