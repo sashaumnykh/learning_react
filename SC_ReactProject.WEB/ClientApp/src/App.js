@@ -31,6 +31,13 @@ export default function App() {
     }
   }
 
+  const userLocale =
+  navigator.languages && navigator.languages.length
+    ? navigator.languages[0]
+    : navigator.language;
+
+  sessionStorage.setItem('locale', userLocale);
+
   const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
   return (

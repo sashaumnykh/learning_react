@@ -4,6 +4,7 @@ import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
 import { DeleteEmployeeButton } from './DeleteEmployeeButton';
 import { useState, useEffect } from 'react';
+import { localeRequest } from '../helper/Consts';
 import '../styles.css';
 import axios from 'axios';
 
@@ -43,8 +44,15 @@ function EmployeesList() {
     }
 
     const handleLastModified = (dateString) => {
+        const options = {
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour12: false
+          };
+        const locale = sessionStorage.getItem(localeRequest);
         const utcDate = new Date(dateString);
-        return utcDate.toLocaleString();
+        const toShow = new Intl.DateTimeFormat(locale, options).format(utcDate);
+        return toShow;
     }
 
     const renderEmployeesTable = () => {
