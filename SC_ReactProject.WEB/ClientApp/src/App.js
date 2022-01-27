@@ -6,9 +6,9 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './styles.css'
 import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
-import { EditEmployee } from './components/EditEmployee';
-import AddEmployeeForm from './components/AddEmployeeForm';
 import { isLoggedInRequest, employeesRequest } from './helper/Consts';
+import { AddEmployeeRoute } from './components/AddEmployeeRoute';
+import { EditEmployeeRoute } from './components/EditEmployeeRoute';
 
 export default function App() {
 
@@ -19,13 +19,11 @@ export default function App() {
 
   const [currentUser, setCurrentUser] = useState({email: "", password: ""});
 
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const login = details => {
-      if (details.email == adminUser.email && details.password == adminUser.password){
+  const login = (login, password) => {
+      if (login == adminUser.email && password == adminUser.password){
         setCurrentUser({
-            email: details.email,
-            password: details.password
+            email: login,
+            password: password
         });
         sessionStorage.setItem(isLoggedInRequest, true);
     }
@@ -42,8 +40,8 @@ export default function App() {
 
   return (
       <div>
-          <Route path="/employee/:id" component={EditEmployee} />
-          <Route path="/add" component={AddEmployeeForm} />
+          <Route path="/employee/:id" component={EditEmployeeRoute} />
+          <Route path="/add" component={AddEmployeeRoute} />
           <Route exact path="/" >
             {isLoggedIn 
             ? ( <div><EmployeesList /></div>) 

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { isLoggedInRequest } from '../helper/Consts';
+import { useFormik } from 'formik';
 import axios from 'axios';
 
 export function EditEmployee() {
@@ -25,85 +26,9 @@ export function EditEmployee() {
         axios('/get/' + id)
           .then(res => {
               setEmployee(res.data);
-            console.log(res.data)})
+            })
           .catch(error => console.log(error));
        }, []);
-
-    const [nameError, setNameError] = useState('');
-    const [nameFieldVisited, setNameFieldVisited] = useState(false);
-    const [emailError, setEmailError] = useState('');
-    const [emailFieldVisited, setEmailFieldVisited] = useState(false);
-    const [salaryError, setSalaryError] = useState('');
-    const [salaryFieldVisited, setSalaryFieldVisited] = useState(false);
-    const [bdayError, setBdayError] = useState('');
-    const [bdayFieldVisited, setBdayFieldVisited] = useState(false);
-
-    const [isInputValid, setIsInputValid] = useState(false);
-
-    useEffect( () => {
-        (nameError || emailError || salaryError || bdayError ) ? setIsInputValid(false) : setIsInputValid(true);
-    }, [nameError, emailError, salaryError, bdayError]);
-
-    const blurHandle = (e) => {
-        switch (e.target.name) {
-            case 'name': {
-                setNameFieldVisited(true);
-                break;
-            }
-            case 'email': {
-                setEmailFieldVisited(true);
-                break;
-            }
-            case 'salary': {
-                setSalaryFieldVisited(true);
-                break;
-            }
-            case 'bday': {
-                setBdayFieldVisited(true);
-                break;
-            }
-        }
-    };
-
-    const handleNameInput = (e) => {
-        let name = e.target.value;
-        setEmployee({...employee, name: e.target.value, lastModified: new Date().toString()});
-        String(name).trim() != ''
-            ? setNameError('')
-            : setNameError('name cannot be empty.');
-    }
-
-    const handleEmailInput = (e) => {
-        let email = e.target.value;
-        setEmployee({...employee, email: e.target.value, lastModified: new Date().toString()});
-        let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        regexEmail.test(String(email).toLowerCase()) 
-            ? setEmailError('')
-            : setEmailError('format is incorrect.');
-    }
-
-    const handleSalaryInput = (e) => {
-        let salary = e.target.value;
-        setEmployee({...employee, salary: e.target.value, lastModified: new Date().toString()});
-        if (salary.trim() === '') {
-            setSalaryError('field cannot be empty.')
-        }
-        else if (Number.isNaN(parseFloat(salary))) {
-            setSalaryError('salary must be a number.')
-        }
-        else if (parseFloat(salary) && parseFloat(salary) < 0) {
-            setSalaryError('salary cannot be a negative number.');
-        }
-        else {
-            setSalaryError('');
-        }
-    }
-
-    const handleBdayInput = (e) => {
-        let bday = e.target.value;
-        setEmployee({...employee, bday: e.target.value, lastModified: new Date().toString()});
-        setBdayError('');
-    }
 
     const saveButtonHandler = () => {
         let now = new Date().toUTCString();
@@ -128,42 +53,88 @@ export function EditEmployee() {
           });
         history.push('/');
     };
+
+    const validate = values => {
+        const errors = {};
+        if (!values.name) {
+          errors.name = 'name is required';
+        }
+        if (!values.email) {
+            errors.email = 'email is required';
+        }
+        else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = 'invalid email address';
+        }
+        if (!values.bday) {
+            errors.bday = 'bday is required';
+        }
+        if (!values.salary) {
+            errors.salary = 'salary is required';
+        }
+        else if (Number.isNaN(parseFloat(values.salary))) {
+            errors.salary = 'salary must be a number';
+        }
+        else if (parseFloat(values.salary) && parseFloat(values.salary) < 0) {
+            errors.salary = 'salary cannot be a negative number';
+        }
+        return errors;
+    }
+      
+
+    const formik = useFormik({
+        initialValues: {
+            name: employee.name,
+            bday: employee.bday,
+            salary: employee.salary,
+            email: employee.email
+        },
+        validate,
+        onSubmit: saveButtonHandler
+    });
     
     return(
-        <form className='f-out' onSubmit={saveButtonHandler}>
+        <form className='f-out' onSubmit={formik.handleSubmit}>
             <div className='f-in'>
                 <h1>Edit:</h1>
                 <div>
-                    <label hrmlFor="employeeName">Name:</label>
-                    <input name="name" onBlur={e => blurHandle(e)} onChange={e => handleNameInput(e)} 
-                            value={employee.name} />
-                    {(nameFieldVisited && nameError) && <div className='error-message'>{nameError}</div>}
+                    <label htmlFor="name">name:</label>
+                    <input id="name" name="name" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.name}/>
+                    {(formik.touched.name && formik.errors.name) ? <div>{formik.errors.name}</div> : null}
                 </div>
                 <div>
-                    <label hrmlFor="employeeEmail">Email:</label>
-                    <input name="email" onBlur={e => blurHandle(e)} onChange={e => handleEmailInput(e)} 
-                            value={employee.email} />
-                    {(emailFieldVisited && emailError) && <div className='error-message'>{emailError}</div>}
+                <label htmlFor="email">email:</label>
+                    <input id="email" name="email" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}/>
+                    {(formik.touched.email && formik.errors.email) ? <div>{formik.errors.email}</div> : null}
                 </div>
                 <div>
-                    <label hrmlFor="employeeBirthday">Birthday:</label>
-                    <input name="bday" type="date" onBlur={e => blurHandle(e)} 
-                            onChange={e => handleBdayInput(e)} 
-                            value={employee.bday} />
-                    {(bdayFieldVisited && bdayError) && <div className='error-message'>{bdayError}</div>}
+                <label htmlFor="bday">birthday:</label>
+                    <input id="bday" name="bday" type="date" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.bday}/>
+                    {(formik.touched.bday && formik.errors.bday) ? <div>{formik.errors.bday}</div> : null}
                 </div>
                 <div>
-                    <label hrmlFor="employeeSalary">Salary:</label>
-                    <input name="salary" onBlur={e => blurHandle(e)} onChange={e => handleSalaryInput(e)} 
-                            value={employee.salary} />
-                    {(salaryFieldVisited && salaryError) && <div className='error-message'>{salaryError}</div>}
+                <label htmlFor="salary">salary:</label>
+                    <input id="salary" name="salary" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.salary}/>
+                    {(formik.touched.salary && formik.errors.salary) ? <div>{formik.errors.salary}</div> : null}
                 </div>
                 <div className='buttons'>
-                    <input type="submit" value="Save" disabled={!isInputValid}/>
-                    <button onClick={() => {history.push('/')}}>Cancel</button>
+                    <input type="submit" value="SAVE"/>
+                    <button onClick={() => {history.push('/')}}>CANCEL</button>
                 </div>
             </div>
         </form>
         
     );
+
 }

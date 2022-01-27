@@ -1,148 +1,106 @@
 import React, { Component, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { isLoggedInRequest } from '../helper/Consts';
+import { useFormik } from 'formik';
 import axios from 'axios';
 
 function AddEmployeeForm() {
     const history = useHistory();
-    const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
-    const [name, setName] = useState('');
-    const [nameError, setNameError] = useState('field cannot be empty.');
-    const [nameFieldVisited, setNameFieldVisited] = useState(false);
-    const [email, setEmail] = useState('');
-    const [emailError, setEmailError] = useState('field cannot be empty.');
-    const [emailFieldVisited, setEmailFieldVisited] = useState(false);
-    const [salary, setSalary] = useState('');
-    const [salaryError, setSalaryError] = useState('field cannot be empty.');
-    const [salaryFieldVisited, setSalaryFieldVisited] = useState(false);
-    const [bday, setBday] = useState('');
-    const [bdayError, setBdayError] = useState('field cannot be empty.');
-    const [bdayFieldVisited, setBdayFieldVisited] = useState(false);
-
-    const [isInputValid, setIsInputValid] = useState(false);
-
-    useEffect( () => {
-        (nameError || emailError || salaryError || bdayError ) ? setIsInputValid(false) : setIsInputValid(true);
-    }, [nameError, emailError, salaryError, bdayError]);
-
-    const blurHandle = (e) => {
-        switch (e.target.name) {
-            case 'name': {
-                setNameFieldVisited(true);
-                break;
-            }
-            case 'email': {
-                setEmailFieldVisited(true);
-                break;
-            }
-            case 'salary': {
-                setSalaryFieldVisited(true);
-                break;
-            }
-            case 'bday': {
-                setBdayFieldVisited(true);
-                break;
-            }
+    const validate = values => {
+        const errors = {};
+        if (!values.name) {
+          errors.name = 'name is required';
         }
-    };
+        if (!values.email) {
+            errors.email = 'email is required';
+        }
+        else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = 'invalid email address';
+        }
+        if (!values.bday) {
+            errors.bday = 'bday is required';
+        }
+        if (!values.salary) {
+            errors.salary = 'salary is required';
+        }
+        else if (Number.isNaN(parseFloat(values.salary))) {
+            errors.salary = 'salary must be a number';
+        }
+        else if (parseFloat(values.salary) && parseFloat(values.salary) < 0) {
+            errors.salary = 'salary cannot be a negative number';
+        }
+        return errors;
+    }
+      
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            bday: '',
+            salary: '',
+            email: ''
+        },
+        validate,
+        onSubmit: values => {
+            axios.post('/employee/', {
+                name: values.name,
+                salary: values.salary,
+                email: values.email,
+                bday: values.bday,
+                lastModified: new Date().toUTCString()
+            })
+              .then(function (response) {
+                console.log('add employee: ' + response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+            history.push('/');
+          }
+    });
 
-    const addButtonHandler = () => {
-        axios.post('/employee/', {
-            name: name,
-            salary: salary,
-            email: email,
-            bday: bday,
-            lastModified: new Date().toUTCString()
-        })
-          .then(function (response) {
-            console.log('add employee: ' + response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+    const redirect = () => {
         history.push('/');
-    };
-
-    const handleNameInput = (e) => {
-        let name = e.target.value;
-        setName(name);
-        String(name).trim() != ''
-            ? setNameError('')
-            : setNameError('name cannot be empty.');
-    }
-
-    const handleEmailInput = (e) => {
-        let email = e.target.value;
-        setEmail(email);
-        let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        regexEmail.test(String(email).toLowerCase()) 
-            ? setEmailError('')
-            : setEmailError('format is incorrect.');
-    }
-
-    const handleSalaryInput = (e) => {
-        let salary = e.target.value;
-        setSalary(salary);
-        if (salary.trim() === '') {
-            setSalaryError('field cannot be empty.')
-        }
-        else if (Number.isNaN(parseFloat(salary))) {
-            setSalaryError('salary must be a number.')
-        }
-        else if (parseFloat(salary) && parseFloat(salary) < 0) {
-            setSalaryError('salary cannot be a negative number.');
-        }
-        else {
-            setSalaryError('');
-        }
-    }
-
-    const handleBdayInput = (e) => {
-        let bday = e.target.value;
-        setBday(bday);
-        setBdayError('');
-    }
-    
-    if (!isLoggedIn) {
-        history.push('/');
-        return(
-            null
-        );
     }
     
     return(
-        <form className='f-out' onSubmit={addButtonHandler}>
+        <form className='f-out' onSubmit={formik.handleSubmit}>
             <div className='f-in'>
                 <h1>Add an employee:</h1>
                 <div>
-                    <label>Name:</label>
-                    <input name="name" onBlur={e => blurHandle(e)} onChange={e => handleNameInput(e)} 
-                            value={name} />
-                    {(nameFieldVisited && nameError) && <div className='error-message'>{nameError}</div>}
+                    <label htmlFor="name">name:</label>
+                    <input id="name" name="name" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.name}/>
+                    {(formik.touched.name && formik.errors.name) ? <div>{formik.errors.name}</div> : null}
                 </div>
                 <div>
-                    <label>Email:</label>
-                    <input name="email" onBlur={e => blurHandle(e)} onChange={e => handleEmailInput(e)} 
-                            value={email} />
-                    {(emailFieldVisited && emailError) && <div className='error-message'>{emailError}</div>}
+                <label htmlFor="email">email:</label>
+                    <input id="email" name="email" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}/>
+                    {(formik.touched.email && formik.errors.email) ? <div>{formik.errors.email}</div> : null}
                 </div>
                 <div>
-                    <label>Birthday:</label>
-                    <input name="bday" type="date"  onBlur={e => blurHandle(e)}
-                            onChange={e => handleBdayInput(e)} 
-                            value={bday} />
-                    {(bdayFieldVisited && bdayError) && <div className='error-message'>{bdayError}</div>}
+                <label htmlFor="bday">birthday:</label>
+                    <input id="bday" name="bday" type="date" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.bday}/>
+                    {(formik.touched.bday && formik.errors.bday) ? <div>{formik.errors.bday}</div> : null}
                 </div>
                 <div>
-                    <label>Salary:</label>
-                    <input name="salary" onBlur={e => blurHandle(e)} onChange={e => handleSalaryInput(e)} 
-                            value={salary} />
-                    {(salaryFieldVisited && salaryError) && <div className='error-message'>{salaryError}</div>}
+                <label htmlFor="salary">salary:</label>
+                    <input id="salary" name="salary" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.salary}/>
+                    {(formik.touched.salary && formik.errors.salary) ? <div>{formik.errors.salary}</div> : null}
                 </div>
                 <div className='buttons'>
-                    <input type="submit" value="Add" disabled={!isInputValid}/>
-                    <button onClick={() => {history.push('/')}}>Cancel</button>
+                    <input type="submit" value="ADD"/>
+                    <button onClick={() => {history.push('/')}}>CANCEL</button>
                 </div>
             </div>
         </form>

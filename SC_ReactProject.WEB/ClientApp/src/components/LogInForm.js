@@ -1,74 +1,58 @@
 import React, { Component, useState, useContext, useEffect } from "react";
+import { useFormik } from 'formik';
 
 function LogInForm({login}) {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [emailFieldVisited, setEmailFieldVisited] = useState(false);
-    const [passwordFieldVisited, setPasswordFieldVisited] = useState(false);
-    const [emailError, setEmailError] = useState('email cannot be empty.');
-    const [passwordError, setPasswordError] = useState('password cannot be empty.');
-
-    const submitHandler = e => {
-        e.preventDefault();
-        login({email, password});
-    }
-
     const [isInputValid, setIsInputValid] = useState(false);
 
-    useEffect( () => {
-        (emailError || passwordError) ? setIsInputValid(false) : setIsInputValid(true);
-    }, [emailError, passwordError]);
-
-    const blurHandle = (e) => {
-        switch (e.target.name) {
-            case 'email': {
-                setEmailFieldVisited(true);
-                break;
-            }
-            case 'password': {
-                setPasswordFieldVisited(true);
-                break;
-            }
+    // useEffect( () => {
+    //     (emailError || passwordError) ? setIsInputValid(false) : setIsInputValid(true);
+    // }, [emailError, passwordError]);
+    
+    const validate = values => {
+        const errors = {};
+        if (!values.login) {
+          errors.login = 'login is required';
         }
-    };
-
-    const handleEmailInput = (e) => {
-        let email = e.target.value;
-        setEmail(email);
-        /*{
-        let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        console.log(regexEmail.test(String(email).toLowerCase()));
-        regexEmail.test(String(email).toLowerCase()) 
-            ? setEmailError('')
-            : setEmailError('email is incorrect.');
-        } */
-        setEmailError('');
-    }
-
-    const handlePasswordInput = (e) => {
-        let password = e.target.value;
-        setPassword(password);
-        if (String(password).trim() != '') {
-            setPasswordError('');
+        if (!values.password) {
+          errors.password = 'password is required';
         }
-    }
+        return errors;
+      };
+
+    const formik = useFormik({
+        initialValues: {
+          login: '',
+          password: '',
+        },
+        validate,
+        onSubmit: values => {
+          login(values.login, values.password);
+        },
+      });
 
     return(
-        <form className='f-out' onSubmit={submitHandler}>
+        <form className='f-out' onSubmit={formik.handleSubmit}>
             <div className="f-in">
-                <h2>Login</h2>
-                <div className="form-group">
-                    <label htmlFor="email">email:</label>
-                    <input type="text" name="email" id="email" value={email} onBlur={e => blurHandle(e)} onChange={e => handleEmailInput(e)}/>
-                    {(emailFieldVisited && emailError) && <div className='error-message'>{emailError}</div>}
+                
+                <h2>Log in</h2>
+                <div htmlFor="login" className="form-group">
+                    <label htmlFor="login">login:</label>
+                    <input id="login" name="login" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.login}/>
+                    {(formik.touched.login && formik.errors.login) ? <div>{formik.errors.login}</div> : null}
                 </div>
-                <div className="form-group">
+                <div htmlFor="password" className="form-group">
                     <label htmlFor="password">password:</label>
-                    <input type="text" name="password" id="password" value={password} onBlur={e => blurHandle(e)} onChange={e => handlePasswordInput(e)}/>
-                    {(passwordFieldVisited && passwordError) && <div className='error-message'>{passwordError}</div>}
+                    <input id="password" name="password" type="text" 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.password}/>
+                    {(formik.touched.password && formik.errors.password) ? <div>{formik.errors.password}</div> : null}
                 </div>
-                <input type="submit" value="LOGIN" disabled={!isInputValid}/>
+                <input type="submit" value="LOG IN"/>
             </div>
         </form>
     );
