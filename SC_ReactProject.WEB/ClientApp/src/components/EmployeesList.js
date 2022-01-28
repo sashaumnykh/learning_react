@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
-import { DeleteEmployeeButton } from './DeleteEmployeeButton';
 import { useState, useEffect } from 'react';
 import { localeRequest } from '../helper/Consts';
 import '../styles.css';
