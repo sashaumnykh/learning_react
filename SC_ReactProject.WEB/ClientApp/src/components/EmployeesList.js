@@ -14,6 +14,8 @@ function EmployeesList() {
 
     const [employees, setEmployees] = useState([]);
     const [sortOrder, setSortOrder] = useState('default');
+
+    const [reload, setReload] = useState(0);
     
     useEffect(()=>{
         axios('/getall')
@@ -21,7 +23,7 @@ function EmployeesList() {
                 setEmployees(res.data);
             })
             .catch(error => console.log(error));
-       }, []);
+       }, [reload]);
 
     const onSort = (event, sortKey, sortOrder) => {
         const data = [...employees];
@@ -41,6 +43,17 @@ function EmployeesList() {
             }
         }
         setEmployees(data);
+    }
+
+    const handleDelete = (id) => {
+        axios.delete('/delete/' + id)
+            .then(function (response) {
+                console.log(response);
+                setReload(reload + 1);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const handleDateFormat = (dateString, withTime = false) => {
@@ -73,7 +86,11 @@ function EmployeesList() {
                     <EditEmployeeButton id={employee.employeeId}/>
                 </td>
                 <td>
-                    <DeleteEmployeeButton id={employee.employeeId} />
+                    <button className='page-button' 
+                        value={employee.employeeId} 
+                        onClick={() => handleDelete(employee.employeeId)}>
+                        Delete
+                    </button>
                 </td>
             </tr>
             )
