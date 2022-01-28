@@ -2,6 +2,9 @@ import React, { Component, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import axios from 'axios';
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function AddEmployeeForm() {
     const history = useHistory();
@@ -16,9 +19,6 @@ function AddEmployeeForm() {
         }
         else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
             errors.email = 'invalid email address';
-        }
-        if (!values.bday) {
-            errors.bday = 'bday is required';
         }
         if (!values.salary) {
             errors.salary = 'salary is required';
@@ -35,7 +35,6 @@ function AddEmployeeForm() {
     const formik = useFormik({
         initialValues: {
             name: '',
-            bday: '',
             salary: '',
             email: ''
         },
@@ -45,7 +44,7 @@ function AddEmployeeForm() {
                 name: values.name,
                 salary: values.salary,
                 email: values.email,
-                bday: values.bday,
+                bday: birthday,
                 lastModified: new Date().toUTCString()
             })
               .then(function (response) {
@@ -58,8 +57,23 @@ function AddEmployeeForm() {
           }
     });
 
-    const redirect = () => {
-        history.push('/');
+    const [birthday, setBirthday] = useState(new Date());
+    const [isValid, setIsValid] = useState(false);
+    const [bdayError, setBdayError] = useState('');
+
+    useEffect( () => {
+        (bdayError) ? setIsValid(false) : setIsValid(true);
+    }, [bdayError]);
+
+    const handleBdayChange = (date) => {
+        if (date !== null) {
+            setBirthday(date);
+            setBdayError('');
+        }
+        else {
+            setBirthday(date);
+            setBdayError('birthay date is required');
+        }
     }
     
     return(
@@ -84,11 +98,15 @@ function AddEmployeeForm() {
                 </div>
                 <div>
                 <label htmlFor="bday">birthday:</label>
-                    <input id="bday" name="bday" type="date" 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.bday}/>
-                    {(formik.touched.bday && formik.errors.bday) ? <div>{formik.errors.bday}</div> : null}
+                    <DatePicker 
+                        selected={birthday} 
+                        onChange={date => handleBdayChange(date)}
+                        value={birthday ? birthday.toLocaleDateString() : null}
+                        isClearable
+                        showYearDropdown
+                        showMonthDropdown
+                    />
+                    { (bdayError) && <div>{bdayError}</div>}
                 </div>
                 <div>
                 <label htmlFor="salary">salary:</label>
@@ -99,7 +117,7 @@ function AddEmployeeForm() {
                     {(formik.touched.salary && formik.errors.salary) ? <div>{formik.errors.salary}</div> : null}
                 </div>
                 <div className='buttons'>
-                    <input type="submit" value="ADD"/>
+                    <input type="submit" value="ADD" disabled={!isValid}/>
                     <button onClick={() => {history.push('/')}}>CANCEL</button>
                 </div>
             </div>
