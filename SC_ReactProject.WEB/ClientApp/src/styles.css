@@ -107,3 +107,8 @@ h1:hover {
 .error-message {
   color: red;
 }
+
+.loading {
+  margin: auto;
+  align-items: center;
+}

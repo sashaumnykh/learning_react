@@ -3,6 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { isLoggedInRequest } from '../helper/Consts';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
 
 export function EditEmployee() {
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
@@ -92,8 +93,8 @@ export function EditEmployee() {
             <div className='f-out'>
                 <div className='f-in'> 
                     <h1>Edit:</h1>
-                    
-                    <Formik
+                    {!isLoaded && <ReactLoading className='loading' type={"bars"} color={"grey"} />}
+                    { isLoaded && <Formik
                         initialValues={{
                             name: employee.name,
                             bday: employee.bday,
@@ -138,7 +139,7 @@ export function EditEmployee() {
                                 <button onClick={() => {history.push('/')}}>CANCEL</button>
                             </div>
                         </Form>
-                    </Formik>
+                    </Formik>}
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { localeRequest } from '../helper/Consts';
 import '../styles.css';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
 
 function EmployeesList() {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -15,14 +16,25 @@ function EmployeesList() {
     const [sortOrder, setSortOrder] = useState('default');
 
     const [reload, setReload] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
     
     useEffect(()=>{
         axios('/getall')
             .then(res => {
                 setEmployees(res.data);
+                setIsLoaded(true);
             })
             .catch(error => console.log(error));
        }, [reload]);
+
+    useEffect(()=>{
+        axios('/getall')
+            .then(res => {
+                setEmployees(res.data);
+                setIsLoaded(true);
+            })
+            .catch(error => console.log(error));
+       }, []);
 
     const onSort = (event, sortKey, sortOrder) => {
         const data = [...employees];
@@ -172,6 +184,8 @@ function EmployeesList() {
     return(
         <div className='employee-list'>
             <h1>Employees:</h1>
+            {!isLoaded && <ReactLoading className='loading' type={"bars"} color={"grey"} />}
+            {isLoaded && <div>
             <div className='buttons'>
                 <div className='add'>
                     <button onClick={() => {history.push('/add')}}>Add</button>
@@ -181,6 +195,7 @@ function EmployeesList() {
                 </div>
             </div>
             {contents}
+            </div>}
         </div>
     );
 }
