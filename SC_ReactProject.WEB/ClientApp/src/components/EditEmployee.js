@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { isLoggedInRequest } from '../helper/Consts';
-import { useFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 
 export function EditEmployee() {
@@ -15,6 +15,8 @@ export function EditEmployee() {
         lastModified: ''
     });
 
+    const [isLoaded, setIsLoaded] = useState(false);
+
     let { id } = useParams();
     const history = useHistory();
 
@@ -26,23 +28,28 @@ export function EditEmployee() {
         axios('/get/' + id)
           .then(res => {
               setEmployee(res.data);
+              setIsLoaded(true);
             })
           .catch(error => console.log(error));
-       }, []);
+       }, [isLoaded]);
 
-    const saveButtonHandler = () => {
+    const saveButtonHandler = (values) => {
         let now = new Date().toUTCString();
 
-        setEmployee(employee => ({
-            ...employee,
+        setEmployee({
+            name: values.name,
+            email: values.email,
+            salary: values.salary,
+            bday: values.bday,
             lastModified: now
-        }));
+        });
 
         axios({
             method: 'put',
             url: '/employee/' + id,
             data: {
-                ...employee,
+                ...values,
+                employeeId: id,
                 lastModified: now
             },
           }).then(function (response) {
@@ -79,62 +86,61 @@ export function EditEmployee() {
         }
         return errors;
     }
-      
-
-    const formik = useFormik({
-        initialValues: {
-            name: employee.name,
-            bday: employee.bday,
-            salary: employee.salary,
-            email: employee.email
-        },
-        validate,
-        onSubmit: saveButtonHandler
-    });
     
     return(
-        <form className='f-out' onSubmit={formik.handleSubmit}>
-            <div className='f-in'>
-                <h1>Edit:</h1>
-                <div>
-                    <label htmlFor="name">name:</label>
-                    <input id="name" name="name" type="text" 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.name}/>
-                    {(formik.touched.name && formik.errors.name) ? <div>{formik.errors.name}</div> : null}
-                </div>
-                <div>
-                <label htmlFor="email">email:</label>
-                    <input id="email" name="email" type="text" 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.email}/>
-                    {(formik.touched.email && formik.errors.email) ? <div>{formik.errors.email}</div> : null}
-                </div>
-                <div>
-                <label htmlFor="bday">birthday:</label>
-                    <input id="bday" name="bday" type="date" 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.bday}/>
-                    {(formik.touched.bday && formik.errors.bday) ? <div>{formik.errors.bday}</div> : null}
-                </div>
-                <div>
-                <label htmlFor="salary">salary:</label>
-                    <input id="salary" name="salary" type="text" 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.salary}/>
-                    {(formik.touched.salary && formik.errors.salary) ? <div>{formik.errors.salary}</div> : null}
-                </div>
-                <div className='buttons'>
-                    <input type="submit" value="SAVE"/>
-                    <button onClick={() => {history.push('/')}}>CANCEL</button>
+        <div>
+            <div className='f-out'>
+                <div className='f-in'> 
+                    <h1>Edit:</h1>
+                    
+                    <Formik
+                        initialValues={{
+                            name: employee.name,
+                            bday: employee.bday,
+                            salary: employee.salary,
+                            email: employee.email
+                        }}
+                        validate={validate}
+                        enableReinitialize={true} 
+                        onSubmit={values => saveButtonHandler(values)}
+                    >
+                        <Form>
+                            <div>
+                                <label htmlFor="name">name:</label>
+                                <Field id="name" name="name"/>
+                                <div>
+                                    <ErrorMessage name="name" />
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="email">email:</label>
+                                <Field id="email" name="email"/>
+                                <div>
+                                    <ErrorMessage name="email" />
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="bday">birthday:</label>
+                                <Field id="bday" name="bday" type="date"/>
+                                <div>
+                                    <ErrorMessage name="bday" />
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="salary">salary:</label>
+                                <Field id="salary" name="salary"/>
+                                <div>
+                                    <ErrorMessage name="salary" />
+                                </div>
+                            </div>
+                            <div className='buttons'>
+                                <button type="submit">SAVE</button>
+                                <button onClick={() => {history.push('/')}}>CANCEL</button>
+                            </div>
+                        </Form>
+                    </Formik>
                 </div>
             </div>
-        </form>
-        
+        </div>
     );
-
 }
