@@ -13,7 +13,7 @@ function EmployeesList() {
     const history = useHistory();
 
     const [employees, setEmployees] = useState([]);
-    const [sortOrder, setSortOrder] = useState('default');
+    const [sortOrder, setSortOrder] = useState('asc');
 
     const [reload, setReload] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -40,6 +40,9 @@ function EmployeesList() {
         const data = [...employees];
         switch(sortOrder) {
             case 'default': {
+                let key = 'employeeId';
+                data.sort((a,b) => a[key] - b[key]);
+                setEmployees(data);
                 break;
             }
             case 'asc': {
@@ -129,24 +132,24 @@ function EmployeesList() {
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
                     <th onClick={e => {
-                        changeSortOrder();
                         onSort(e, 'name', sortOrder);
+                        changeSortOrder();
                     }}>Name</th>
                     <th onClick={e => {
-                        changeSortOrder();
                         onSort(e, 'email', sortOrder);
+                        changeSortOrder();
                     }}>Email</th>
                     <th onClick={e => {
-                        changeSortOrder();
                         onSort(e, 'bday', sortOrder);
+                        changeSortOrder();
                     }}>Birthday</th>
                     <th onClick={e => {
-                        changeSortOrder();
                         onSort(e, 'salary', sortOrder);
+                        changeSortOrder();
                     }}>Salary</th>
                     <th onClick={e => {
-                        changeSortOrder();
                         onSort(e, 'lastModified', sortOrder);
+                        changeSortOrder();
                     }}>Last modified date</th>
                     <th></th>
                     <th></th>
