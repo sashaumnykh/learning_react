@@ -1,29 +1,8 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { isLoggedInRequest, tokenRequest } from '../helper/Consts';
 import { useFormik } from 'formik';
-import axios from 'axios';
 
-function LogInForm() {
-    const history = useHistory();
-
-    const login = (login, password) => {
-        axios({
-            method: 'post',
-            url: '/login/',
-            data: {
-                login: login,
-                password: password
-            },
-        }).then(function (response) {
-            sessionStorage.setItem(tokenRequest, response.data);
-            history.push('/');
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-        sessionStorage.setItem(isLoggedInRequest, true);
-    }
+function LogInForm( {login} ) {
+    
     
     const validate = values => {
         const errors = {};
