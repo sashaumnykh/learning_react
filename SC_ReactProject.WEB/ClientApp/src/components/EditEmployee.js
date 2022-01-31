@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Redirect } from "react-router-dom";
 import { isLoggedInRequest, tokenRequest } from '../helper/Consts';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
@@ -20,6 +20,8 @@ export function EditEmployee() {
 
     let { id } = useParams();
     const history = useHistory();
+
+    const [redirect, setRedirect] = useState(false);
     
     const token = sessionStorage.getItem(tokenRequest);
 
@@ -65,11 +67,11 @@ export function EditEmployee() {
             },
           }).then(function (response) {
             console.log(response);
+            setRedirect(true);
           })
           .catch(function (error) {
             console.log(error);
           });
-        history.push('/');
     };
 
     const validate = values => {
@@ -98,10 +100,14 @@ export function EditEmployee() {
         return errors;
     }
     
+    if (redirect) {
+        return <Redirect to='/' />;
+    }
+
     return(
         <div>
             <div className='f-out'>
-                <div className='f-in'> 
+                <div className='f-in'>
                     <h1>Edit:</h1>
                     {!isLoaded && <ReactLoading className='loading' type={"bars"} color={"grey"} />}
                     { isLoaded && <Formik

@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
@@ -10,6 +10,7 @@ import { tokenRequest } from '../helper/Consts';
 function AddEmployeeForm() {
     const history = useHistory();
     const token = sessionStorage.getItem(tokenRequest);
+    const [redirect, setRedirect] = useState(false);
 
     const validate = values => {
         const errors = {};
@@ -57,11 +58,11 @@ function AddEmployeeForm() {
             axios(options)
               .then(function (response) {
                 console.log('add employee: ' + response);
+                setRedirect(true);
               })
               .catch(function (error) {
                 console.log(error);
               });
-            history.push('/');
           }
     });
 
@@ -82,6 +83,10 @@ function AddEmployeeForm() {
             setBirthday(date);
             setBdayError('birthay date is required');
         }
+    }
+
+    if (redirect) {
+        return <Redirect to='/' />;
     }
     
     return(
