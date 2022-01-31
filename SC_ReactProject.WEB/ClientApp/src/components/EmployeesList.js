@@ -20,21 +20,8 @@ function EmployeesList() {
 
     const token = sessionStorage.getItem(tokenRequest);
     
-    useEffect(()=>{
-        axios('/getall', {
-            headers: {
-                Authorization: "Bearer " + token
-             }
-        })
-            .then(res => {
-                setEmployees(res.data);
-                setIsLoaded(true);
-            })
-            .catch(error => console.log(error));
-       }, [reload]);
 
     useEffect(()=>{
-        debugger;
         axios('/getall', {
             headers: {
                 Authorization: "Bearer " + sessionStorage.getItem(tokenRequest)
@@ -45,7 +32,7 @@ function EmployeesList() {
                 setIsLoaded(true);
             })
             .catch(error => console.log(error));
-    }, []);
+    }, [reload]);
 
     const onSort = (event, sortKey, sortOrder) => {
         const data = [...employees];
@@ -113,7 +100,11 @@ function EmployeesList() {
                 <td>{employee.salary}</td>
                 <td>{handleDateFormat(employee.lastModified, true)}</td>
                 <td>
-                    <EditEmployeeButton id={employee.employeeId}/>
+                    <button className='page-button' 
+                        value={employee.employeeId} 
+                        onClick={() => history.push('/employee/' + employee.employeeId)}>
+                        Edit
+                    </button>
                 </td>
                 <td>
                     <button className='page-button' 
