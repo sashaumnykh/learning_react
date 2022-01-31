@@ -8,6 +8,10 @@ using SC_ReactProject.Core.Database;
 using SC_ReactProject.Core.EmployeeModule.Services;
 using SC_ReactProject.Core.EmployeeModule;
 using Microsoft.EntityFrameworkCore;
+using SC_ReactProject.Core.AuthModule;
+using Microsoft.IdentityModel.Tokens;
+using SC_ReactProject.WEB.Controllers;
+using System;
 
 namespace SC_ReactProject.WEB
 {
@@ -23,6 +27,23 @@ namespace SC_ReactProject.WEB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "JwtBearer";
+                options.DefaultChallengeScheme = "JwtBearer";
+            })
+            .AddJwtBearer("JwtBearer", jwtOptions =>
+            {
+                jwtOptions.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = AuthController.SIGNING_KEY,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(5)
+                };
+            });
 
             services.AddControllersWithViews();
 
@@ -34,6 +55,8 @@ namespace SC_ReactProject.WEB
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<Context>(options => options.UseSqlServer(connection).EnableSensitiveDataLogging(), ServiceLifetime.Singleton);
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddSingleton<IUnitOfWork, EFUnitOfWork>();
             services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
@@ -59,7 +82,10 @@ namespace SC_ReactProject.WEB
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
-import { isLoggedInRequest } from '../helper/Consts';
+import { isLoggedInRequest, tokenRequest } from '../helper/Consts';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
@@ -20,13 +20,20 @@ export function EditEmployee() {
 
     let { id } = useParams();
     const history = useHistory();
+    
+    const token = sessionStorage.getItem(tokenRequest);
 
     useEffect(()=>{
         if (!isLoggedIn) {
             history.push('/');
             return null;
         }
-        axios('/get/' + id)
+        axios('/get/' + id,
+        {
+            headers: {
+                Authorization: "Bearer " + token
+             }
+        })
           .then(res => {
               setEmployee(res.data);
               setIsLoaded(true);
@@ -47,6 +54,9 @@ export function EditEmployee() {
 
         axios({
             method: 'put',
+            headers: {
+                Authorization: "Bearer " + token
+            },
             url: '/employee/' + id,
             data: {
                 ...values,

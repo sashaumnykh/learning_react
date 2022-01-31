@@ -5,9 +5,11 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { tokenRequest } from '../helper/Consts';
 
 function AddEmployeeForm() {
     const history = useHistory();
+    const token = sessionStorage.getItem(tokenRequest);
 
     const validate = values => {
         const errors = {};
@@ -40,13 +42,19 @@ function AddEmployeeForm() {
         },
         validate,
         onSubmit: values => {
-            axios.post('/employee/', {
-                name: values.name,
-                salary: values.salary,
-                email: values.email,
-                bday: birthday,
-                lastModified: new Date().toUTCString()
-            })
+            const options = {
+                method: 'POST',
+                headers: { Authorization: "Bearer " + token },
+                url: '/employee/',
+                data: {
+                    name: values.name,
+                    salary: values.salary,
+                    email: values.email,
+                    bday: birthday,
+                    lastModified: new Date().toUTCString()
+                }
+              };
+            axios(options)
               .then(function (response) {
                 console.log('add employee: ' + response);
               })

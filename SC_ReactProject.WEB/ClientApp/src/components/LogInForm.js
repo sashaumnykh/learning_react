@@ -1,9 +1,31 @@
-import React, { Component, useState, useContext, useEffect } from "react";
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import { isLoggedInRequest, employeesRequest, tokenRequest } from '../helper/Consts';
 import { useFormik } from 'formik';
+import axios from 'axios';
 
-function LogInForm({login}) {
+function LogInForm() {
 
     const [isInputValid, setIsInputValid] = useState(false);
+    const history = useHistory();
+
+    const login = (login, password) => {
+        axios({
+            method: 'post',
+            url: '/login/',
+            data: {
+                login: login,
+                password: password
+            },
+        }).then(function (response) {
+            sessionStorage.setItem(tokenRequest, response.data);
+            history.push('/');
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        sessionStorage.setItem(isLoggedInRequest, true);
+    }
 
     // useEffect( () => {
     //     (emailError || passwordError) ? setIsInputValid(false) : setIsInputValid(true);

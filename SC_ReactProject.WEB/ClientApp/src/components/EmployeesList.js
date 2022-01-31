@@ -3,7 +3,7 @@ import { useHistory, Redirect } from 'react-router-dom';
 import { PageButton } from './pageButton';
 import { EditEmployeeButton } from './EditEmployeeButton';
 import { useState, useEffect } from 'react';
-import { localeRequest } from '../helper/Consts';
+import { localeRequest, tokenRequest } from '../helper/Consts';
 import '../styles.css';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
@@ -17,9 +17,15 @@ function EmployeesList() {
 
     const [reload, setReload] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    const token = sessionStorage.getItem(tokenRequest);
     
     useEffect(()=>{
-        axios('/getall')
+        axios('/getall', {
+            headers: {
+                Authorization: "Bearer " + token
+             }
+        })
             .then(res => {
                 setEmployees(res.data);
                 setIsLoaded(true);
@@ -28,13 +34,18 @@ function EmployeesList() {
        }, [reload]);
 
     useEffect(()=>{
-        axios('/getall')
+        debugger;
+        axios('/getall', {
+            headers: {
+                Authorization: "Bearer " + sessionStorage.getItem(tokenRequest)
+            }
+        })
             .then(res => {
                 setEmployees(res.data);
                 setIsLoaded(true);
             })
             .catch(error => console.log(error));
-       }, []);
+    }, []);
 
     const onSort = (event, sortKey, sortOrder) => {
         const data = [...employees];
@@ -60,7 +71,12 @@ function EmployeesList() {
     }
 
     const handleDelete = (id) => {
-        axios.delete('/delete/' + id)
+        const options = {
+            method: 'DELETE',
+            headers: { Authorization: "Bearer " + token },
+            url: '/delete/' + id,
+          };
+        axios(options)
             .then(function (response) {
                 console.log(response);
                 setReload(reload + 1);

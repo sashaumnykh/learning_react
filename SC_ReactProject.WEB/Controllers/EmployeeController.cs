@@ -6,10 +6,12 @@ using SC_ReactProject.Core.EmployeeModule.Services;
 using SC_ReactProject.WEB.Models;
 using SC_ReactProject.Core.EmployeeModule;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SC_ReactProject.WEB.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {

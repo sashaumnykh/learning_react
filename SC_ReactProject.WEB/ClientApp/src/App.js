@@ -1,33 +1,18 @@
 ﻿import React, { useState } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect, useHistory } from 'react-router-dom';
 
 
 //import './custom.css'
 import './styles.css'
 import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
-import { isLoggedInRequest, employeesRequest } from './helper/Consts';
+import { isLoggedInRequest, employeesRequest, tokenRequest } from './helper/Consts';
 import { AddEmployeeRoute } from './components/AddEmployeeRoute';
 import { EditEmployeeRoute } from './components/EditEmployeeRoute';
 
+
 export default function App() {
-
-  const adminUser = {
-    email: "admin",
-    password: "admin"
-  }
-
-  const [currentUser, setCurrentUser] = useState({email: "", password: ""});
-
-  const login = (login, password) => {
-      if (login == adminUser.email && password == adminUser.password){
-        setCurrentUser({
-            email: login,
-            password: password
-        });
-        sessionStorage.setItem(isLoggedInRequest, true);
-    }
-  }
+  const history = useHistory();
 
   const userLocale =
   navigator.languages && navigator.languages.length
@@ -45,7 +30,7 @@ export default function App() {
           <Route exact path="/" >
             {isLoggedIn 
             ? ( <div><EmployeesList /></div>) 
-            : <LogInForm login={login} />}
+            : <LogInForm/>}
           </Route>
           <Redirect to="/" />
       </div>
