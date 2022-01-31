@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Route, Switch, Redirect, useHistory } from 'react-router-dom';
-import { isLoggedInRequest, employeesRequest, tokenRequest } from '../helper/Consts';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { isLoggedInRequest, tokenRequest } from '../helper/Consts';
 import { useFormik } from 'formik';
 import axios from 'axios';
 
 function LogInForm() {
-
-    const [isInputValid, setIsInputValid] = useState(false);
     const history = useHistory();
 
     const login = (login, password) => {
@@ -26,10 +24,6 @@ function LogInForm() {
         });
         sessionStorage.setItem(isLoggedInRequest, true);
     }
-
-    // useEffect( () => {
-    //     (emailError || passwordError) ? setIsInputValid(false) : setIsInputValid(true);
-    // }, [emailError, passwordError]);
     
     const validate = values => {
         const errors = {};
@@ -56,7 +50,6 @@ function LogInForm() {
     return(
         <form className='f-out' onSubmit={formik.handleSubmit}>
             <div className="f-in">
-                
                 <h2>Log in</h2>
                 <div htmlFor="login" className="form-group">
                     <label htmlFor="login">login:</label>

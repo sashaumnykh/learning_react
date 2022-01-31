@@ -1,7 +1,6 @@
 import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { PageButton } from './pageButton';
-import { EditEmployeeButton } from './EditEmployeeButton';
 import { useState, useEffect } from 'react';
 import { localeRequest, tokenRequest } from '../helper/Consts';
 import '../styles.css';
@@ -20,7 +19,6 @@ function EmployeesList() {
 
     const token = sessionStorage.getItem(tokenRequest);
     
-
     useEffect(()=>{
         axios('/getall', {
             headers: {
@@ -53,6 +51,10 @@ function EmployeesList() {
                 setEmployees(data);
                 break;
             }
+            default: {
+                alert('sos! 42')
+                break;
+            }
         }
         setEmployees(data);
     }
@@ -62,7 +64,7 @@ function EmployeesList() {
             method: 'DELETE',
             headers: { Authorization: "Bearer " + token },
             url: '/delete/' + id,
-          };
+        };
         axios(options)
             .then(function (response) {
                 console.log(response);
@@ -93,7 +95,7 @@ function EmployeesList() {
     const renderEmployeesTable = () => {
         let emps = employees.map(employee => 
             (
-            <tr hey={employee.name}>
+            <tr key={employee.name}>
                 <td>{employee.name}</td>
                 <td>{employee.email}</td>
                 <td>{handleDateFormat(employee.bday, false)}</td>
@@ -131,6 +133,10 @@ function EmployeesList() {
                     setSortOrder('default');
                     break;
                 }
+                default: {
+                    alert('sos! 42')
+                    break;
+                }
             }
         }
 
@@ -138,28 +144,30 @@ function EmployeesList() {
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
-                    <th onClick={e => {
-                        onSort(e, 'name', sortOrder);
-                        changeSortOrder();
-                    }}>Name</th>
-                    <th onClick={e => {
-                        onSort(e, 'email', sortOrder);
-                        changeSortOrder();
-                    }}>Email</th>
-                    <th onClick={e => {
-                        onSort(e, 'bday', sortOrder);
-                        changeSortOrder();
-                    }}>Birthday</th>
-                    <th onClick={e => {
-                        onSort(e, 'salary', sortOrder);
-                        changeSortOrder();
-                    }}>Salary</th>
-                    <th onClick={e => {
-                        onSort(e, 'lastModified', sortOrder);
-                        changeSortOrder();
-                    }}>Last modified date</th>
-                    <th></th>
-                    <th></th>
+                    <tr key='header'>
+                        <th onClick={e => {
+                            onSort(e, 'name', sortOrder);
+                            changeSortOrder();
+                        }}>Name</th>
+                        <th onClick={e => {
+                            onSort(e, 'email', sortOrder);
+                            changeSortOrder();
+                        }}>Email</th>
+                        <th onClick={e => {
+                            onSort(e, 'bday', sortOrder);
+                            changeSortOrder();
+                        }}>Birthday</th>
+                        <th onClick={e => {
+                            onSort(e, 'salary', sortOrder);
+                            changeSortOrder();
+                        }}>Salary</th>
+                        <th onClick={e => {
+                            onSort(e, 'lastModified', sortOrder);
+                            changeSortOrder();
+                        }}>Last modified date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                     {
@@ -180,7 +188,7 @@ function EmployeesList() {
         for (let i = 0; i < pagesNumber; i++){
             let number = i + 1;
             buttons.push(
-                <PageButton pageNumber={number} onClick={handlePageButtonChange}/>
+                <PageButton key={number}  pageNumber={number} onClick={handlePageButtonChange}/>
             );
         }
         return(buttons);
@@ -204,7 +212,7 @@ function EmployeesList() {
                     {renderPagesButtons(pagesNumber)}
                 </div>
             </div>
-            {contents}
+                {contents}
             </div>}
         </div>
     );

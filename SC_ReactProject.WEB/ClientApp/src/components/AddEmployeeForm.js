@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -15,7 +15,7 @@ function AddEmployeeForm() {
     const validate = values => {
         const errors = {};
         if (!values.name) {
-          errors.name = 'name is required';
+            errors.name = 'name is required';
         }
         if (!values.email) {
             errors.email = 'email is required';
@@ -54,16 +54,16 @@ function AddEmployeeForm() {
                     bday: birthday,
                     lastModified: new Date().toUTCString()
                 }
-              };
+            };
             axios(options)
-              .then(function (response) {
-                console.log('add employee: ' + response);
-                setRedirect(true);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }
+                .then(function (response) {
+                    console.log('add employee: ' + response);
+                    setRedirect(true);
+                })
+                .catch(function (error) {
+                 console.log(error);
+                });
+        }
     });
 
     const [birthday, setBirthday] = useState(new Date());
@@ -135,7 +135,6 @@ function AddEmployeeForm() {
                 </div>
             </div>
         </form>
-        
     );
 }
 

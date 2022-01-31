@@ -36,12 +36,12 @@ export function EditEmployee() {
                 Authorization: "Bearer " + token
              }
         })
-          .then(res => {
-              setEmployee(res.data);
-              setIsLoaded(true);
+            .then(res => {
+                setEmployee(res.data);
+                setIsLoaded(true);
             })
-          .catch(error => console.log(error));
-       }, [isLoaded]);
+            .catch(error => console.log(error));
+        }, [isLoaded]);
 
     const saveButtonHandler = (values) => {
         let now = new Date().toUTCString();
@@ -65,19 +65,19 @@ export function EditEmployee() {
                 employeeId: id,
                 lastModified: now
             },
-          }).then(function (response) {
-            console.log(response);
-            setRedirect(true);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            }).then(function (response) {
+                console.log(response);
+                setRedirect(true);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
     const validate = values => {
         const errors = {};
         if (!values.name) {
-          errors.name = 'name is required';
+            errors.name = 'name is required';
         }
         if (!values.email) {
             errors.email = 'email is required';
