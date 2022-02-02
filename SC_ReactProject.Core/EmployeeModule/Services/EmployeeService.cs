@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SC_ReactProject.Core.Common;
 
 namespace SC_ReactProject.Core.EmployeeModule.Services
 {
@@ -54,14 +55,10 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
             return ToDTO(employee);
         }
 
-        public IEnumerable<EmployeeDTO> GetAll()
+        public GetAllResponse GetAll(int page = 0, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
-            List<EmployeeDTO> emps = new List<EmployeeDTO>();
-            foreach (Employee employee in _employeeRepo.GetAll())
-            {
-                emps.Add(ToDTO(employee));
-            }
-            return emps;
+            GetAllResponse resp = _employeeRepo.GetAll(page, sort, sortOrder, comparer);
+            return resp;
         }
 
         public void Update(EmployeeDTO employeeDTO)

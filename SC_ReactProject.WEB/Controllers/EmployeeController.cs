@@ -7,6 +7,7 @@ using SC_ReactProject.WEB.Models;
 using SC_ReactProject.Core.EmployeeModule;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using SC_ReactProject.Core.Common;
 
 namespace SC_ReactProject.WEB.Controllers
 {
@@ -47,20 +48,15 @@ namespace SC_ReactProject.WEB.Controllers
         }
 
         [HttpGet]
-        [Route("/getall")]
-        public IEnumerable<EmployeeVM> GetAll()
+        [Route("/api/getall")]
+        public GetAllResponse GetAll(int page = 0, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
-            IEnumerable<EmployeeDTO> employees = _employeeService.GetAll();
-            List<EmployeeVM> result = new List<EmployeeVM>();
-            foreach (EmployeeDTO employee in employees)
-            {
-                result.Add(FromDTO(employee));
-            }
-            return result;
+            GetAllResponse resp = _employeeService.GetAll(page, sort, sortOrder, comparer);
+            return resp;
         }
 
         [HttpGet]
-        [Route("/get/{id}")]
+        [Route("/api/get/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetById(int id)
@@ -72,7 +68,7 @@ namespace SC_ReactProject.WEB.Controllers
         }
 
         [HttpPost]
-        [Route("/employee/")]
+        [Route("/api/employee/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Create([FromBody] EmployeeVM toCreate)
@@ -85,7 +81,7 @@ namespace SC_ReactProject.WEB.Controllers
         }
 
         [HttpPut]
-        [Route("/employee/{id}")]
+        [Route("/api/employee/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Update(EmployeeVM employee)
@@ -96,7 +92,7 @@ namespace SC_ReactProject.WEB.Controllers
         }
 
         [HttpDelete]
-        [Route("/delete/{id}")]
+        [Route("/api/delete/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(int id)

@@ -26,7 +26,7 @@ export default function App() {
     const login = (login, password) => {
         axios({
             method: 'post',
-            url: '/login/',
+            url: '/api/login/',
             data: {
                 login: login,
                 password: password
@@ -50,6 +50,9 @@ export default function App() {
                 {isLoggedIn 
                 ? ( <div><EmployeesList /></div>) 
                 : <LogInForm login={login} error={loginError}/>}
+            </Route>
+            <Route path="/api:other" > 
+                <Redirect to="/" />
             </Route>
             <Redirect to="/" />
         </div>

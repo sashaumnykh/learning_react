@@ -46,7 +46,7 @@ function AddEmployeeForm() {
             const options = {
                 method: 'POST',
                 headers: { Authorization: "Bearer " + token },
-                url: '/employee/',
+                url: '/api/employee/',
                 data: {
                     name: values.name,
                     salary: values.salary,

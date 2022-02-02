@@ -12,7 +12,11 @@ function EmployeesList() {
     const history = useHistory();
 
     const [employees, setEmployees] = useState([]);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('default');
+    const [sortField, setSortField] = useState('name');
+    const [toSort, setToSort] = useState(false);
+    
+    const [employeesNumber, setEmployeesNumber] = useState(0);
 
     const [reload, setReload] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -20,50 +24,30 @@ function EmployeesList() {
     const token = sessionStorage.getItem(tokenRequest);
     
     useEffect(()=>{
-        axios('/getall', {
+        axios('/api/getall', {
+            params: {
+                page: currentPageNumber,
+                sort: toSort,
+                sortOrder: sortOrder,
+                comparer: sortField
+            },
             headers: {
                 Authorization: "Bearer " + sessionStorage.getItem(tokenRequest)
             }
         })
             .then(res => {
-                setEmployees(res.data);
+                setEmployees(res.data.employees);
+                setEmployeesNumber(res.data.count);
                 setIsLoaded(true);
             })
             .catch(error => console.log(error));
     }, [reload]);
 
-    const onSort = (event, sortKey, sortOrder) => {
-        const data = [...employees];
-        switch(sortOrder) {
-            case 'default': {
-                let key = 'employeeId';
-                data.sort((a,b) => a[key] - b[key]);
-                setEmployees(data);
-                break;
-            }
-            case 'asc': {
-                data.sort((a,b) => a[sortKey].localeCompare(b[sortKey]));
-                setEmployees(data);
-                break;
-            }
-            case 'desc': {
-                data.sort((a,b) => -a[sortKey].localeCompare(b[sortKey]));
-                setEmployees(data);
-                break;
-            }
-            default: {
-                alert('sos! 42')
-                break;
-            }
-        }
-        setEmployees(data);
-    }
-
     const handleDelete = (id) => {
         const options = {
             method: 'DELETE',
             headers: { Authorization: "Bearer " + token },
-            url: '/delete/' + id,
+            url: '/api/delete/' + id,
         };
         axios(options)
             .then(function (response) {
@@ -90,6 +74,34 @@ function EmployeesList() {
         const utcDate = new Date(dateString);
         const toShow = new Intl.DateTimeFormat(locale, options).format(utcDate);
         return toShow;
+    }
+
+    const changeSortOrder = () => {
+        switch(sortOrder) {
+            case 'default': {
+                setSortOrder('asc');
+                break;
+            }
+            case 'asc': {
+                setSortOrder('desc');
+                break;
+            }
+            case 'desc': {
+                setSortOrder('default');
+                break;
+            }
+            default: {
+                alert('sos! 42')
+                break;
+            }
+        }
+    }
+
+    const fieldClickHandle = (fieldName) => {
+        setSortField(fieldName);
+        setToSort(true);
+        changeSortOrder();
+        setReload(reload + 1);
     }
 
     const renderEmployeesTable = () => {
@@ -119,60 +131,32 @@ function EmployeesList() {
             )
         );
 
-        const changeSortOrder = () => {
-            switch(sortOrder) {
-                case 'default': {
-                    setSortOrder('asc');
-                    break;
-                }
-                case 'asc': {
-                    setSortOrder('desc');
-                    break;
-                }
-                case 'desc': {
-                    setSortOrder('default');
-                    break;
-                }
-                default: {
-                    alert('sos! 42')
-                    break;
-                }
-            }
-        }
-
         return(
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
                     <tr key='header'>
                         <th onClick={e => {
-                            onSort(e, 'name', sortOrder);
-                            changeSortOrder();
+                            fieldClickHandle('name');
                         }}>Name</th>
                         <th onClick={e => {
-                            onSort(e, 'email', sortOrder);
-                            changeSortOrder();
+                            fieldClickHandle('email');
                         }}>Email</th>
                         <th onClick={e => {
-                            onSort(e, 'bday', sortOrder);
-                            changeSortOrder();
+                            fieldClickHandle('bday');
                         }}>Birthday</th>
                         <th onClick={e => {
-                            onSort(e, 'salary', sortOrder);
-                            changeSortOrder();
+                            fieldClickHandle('salary');
                         }}>Salary</th>
                         <th onClick={e => {
-                            onSort(e, 'lastModified', sortOrder);
-                            changeSortOrder();
+                            fieldClickHandle('lastModified');
                         }}>Last modified date</th>
                         <th></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        emps.slice((currentPageNumber - 1) * 10, currentPageNumber * 10)
-                    }
+                    { emps }
                 </tbody>
             </table>
             </div>
@@ -180,7 +164,10 @@ function EmployeesList() {
     };
 
     const handlePageButtonChange = newPageNumber => {
-        setCurrentPageNumber(newPageNumber.target.value);
+        setCurrentPageNumber(Number(newPageNumber.target.value));
+        setTimeout(function(){
+            setReload(reload + 1);
+        }, 1000);
     };
 
     const renderPagesButtons = pagesNumber => {
@@ -195,7 +182,6 @@ function EmployeesList() {
     };
 
     const maxEmpNumber = 10;
-    const employeesNumber = Object.keys(employees).length;
     const pagesNumber = Math.ceil(employeesNumber / maxEmpNumber);
     let contents = renderEmployeesTable();
 
