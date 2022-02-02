@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SC_ReactProject.Core.Common;
 
 namespace SC_ReactProject.Core.EmployeeModule
 {
@@ -38,15 +39,15 @@ namespace SC_ReactProject.Core.EmployeeModule
             return db.Employees.Find(id);
         }
 
-        public (IEnumerable<Employee>, int) GetAll(int page = 1, bool sort = false, string sortOrder = "default", string comparer = "name")
+        public GetAllResponse GetAll(int page = 1, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
             Employee[] employees = { };
             int count = db.Employees.ToList().Count;
-            if (!sort && sortOrder == "default")
+            if (sortOrder == "default")
             {
                 employees = db.Employees.ToArray();
             }
-            else if (sort && sortOrder != "default")
+            else if (sort)
             {
                 switch (comparer)
                 {
@@ -81,8 +82,22 @@ namespace SC_ReactProject.Core.EmployeeModule
                     Array.Reverse(employees);
                 }
             }
+
+            int len = employees.Length;
+
+            if (len < page * 10)
+            {
+                return new GetAllResponse(
+                employees: new ArraySegment<Employee>(employees).Slice((page - 1) * 10, len - (page - 1) * 10),
+                count: count
+            );
+            }
+
             //employees.Sort(((p, q) => p.name.CompareTo(q.name)));
-            return (new ArraySegment<Employee>(employees, (page - 1) * 10, page * 10), count);
+            return new GetAllResponse(
+                employees: new ArraySegment<Employee>(employees).Slice((page - 1) * 10, 10),
+                count: count
+            );
         }
 
         public void Update(Employee employee)

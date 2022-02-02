@@ -15,6 +15,8 @@ function EmployeesList() {
     const [sortOrder, setSortOrder] = useState('default');
     const [sortField, setSortField] = useState('name');
     const [toSort, setToSort] = useState(false);
+    
+    const [employeesNumber, setEmployeesNumber] = useState(0);
 
     const [reload, setReload] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -22,7 +24,7 @@ function EmployeesList() {
     const token = sessionStorage.getItem(tokenRequest);
     
     useEffect(()=>{
-        axios('/getall', {
+        axios('/api/getall', {
             params: {
                 page: currentPageNumber,
                 sort: toSort,
@@ -34,10 +36,8 @@ function EmployeesList() {
             }
         })
             .then(res => {
-                debugger;
-                console.log('res:', res);
-                console.log('data: ', res.data);
-                setEmployees(res.data);
+                setEmployees(res.data.employees);
+                setEmployeesNumber(res.data.count);
                 setIsLoaded(true);
             })
             .catch(error => console.log(error));
@@ -47,7 +47,7 @@ function EmployeesList() {
         const options = {
             method: 'DELETE',
             headers: { Authorization: "Bearer " + token },
-            url: '/delete/' + id,
+            url: '/api/delete/' + id,
         };
         axios(options)
             .then(function (response) {
@@ -74,6 +74,34 @@ function EmployeesList() {
         const utcDate = new Date(dateString);
         const toShow = new Intl.DateTimeFormat(locale, options).format(utcDate);
         return toShow;
+    }
+
+    const changeSortOrder = () => {
+        switch(sortOrder) {
+            case 'default': {
+                setSortOrder('asc');
+                break;
+            }
+            case 'asc': {
+                setSortOrder('desc');
+                break;
+            }
+            case 'desc': {
+                setSortOrder('default');
+                break;
+            }
+            default: {
+                alert('sos! 42')
+                break;
+            }
+        }
+    }
+
+    const fieldClickHandle = (fieldName) => {
+        setSortField(fieldName);
+        setToSort(true);
+        changeSortOrder();
+        setReload(reload + 1);
     }
 
     const renderEmployeesTable = () => {
@@ -103,56 +131,25 @@ function EmployeesList() {
             )
         );
 
-        const changeSortOrder = () => {
-            switch(sortOrder) {
-                case 'default': {
-                    setSortOrder('asc');
-                    break;
-                }
-                case 'asc': {
-                    setSortOrder('desc');
-                    break;
-                }
-                case 'desc': {
-                    setSortOrder('default');
-                    break;
-                }
-                default: {
-                    alert('sos! 42')
-                    break;
-                }
-            }
-        }
-
         return(
             <div>
             <table className='employee-table' atia-aria-labelledby='tablelabel'>
                 <thead>
                     <tr key='header'>
                         <th onClick={e => {
-                            setSortField('name');
-                            setToSort(true);
-                            changeSortOrder();
+                            fieldClickHandle('name');
                         }}>Name</th>
                         <th onClick={e => {
-                            setSortField('email');
-                            setToSort(true);
-                            changeSortOrder();
+                            fieldClickHandle('email');
                         }}>Email</th>
                         <th onClick={e => {
-                            setSortOrder('bday');
-                            setToSort(true);
-                            changeSortOrder();
+                            fieldClickHandle('bday');
                         }}>Birthday</th>
                         <th onClick={e => {
-                            setSortField('salary');
-                            setToSort(true);
-                            changeSortOrder();
+                            fieldClickHandle('salary');
                         }}>Salary</th>
                         <th onClick={e => {
-                            setSortField('lastModified');
-                            setToSort(true);
-                            changeSortOrder();
+                            fieldClickHandle('lastModified');
                         }}>Last modified date</th>
                         <th></th>
                         <th></th>
@@ -167,7 +164,10 @@ function EmployeesList() {
     };
 
     const handlePageButtonChange = newPageNumber => {
-        setCurrentPageNumber(newPageNumber.target.value);
+        setCurrentPageNumber(Number(newPageNumber.target.value));
+        setTimeout(function(){
+            setReload(reload + 1);
+        }, 1000);
     };
 
     const renderPagesButtons = pagesNumber => {
@@ -182,7 +182,6 @@ function EmployeesList() {
     };
 
     const maxEmpNumber = 10;
-    const employeesNumber = Object.keys(employees).length;
     const pagesNumber = Math.ceil(employeesNumber / maxEmpNumber);
     let contents = renderEmployeesTable();
 

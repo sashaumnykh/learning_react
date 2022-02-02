@@ -34,7 +34,7 @@ export function EditEmployee() {
             history.push('/');
             return null;
         }
-        axios('/get/' + id,
+        axios('/api/get/' + id,
         {
             headers: {
                 Authorization: "Bearer " + token
@@ -64,7 +64,7 @@ export function EditEmployee() {
             headers: {
                 Authorization: "Bearer " + token
             },
-            url: '/employee/' + id,
+            url: '/api/employee/' + id,
             data: {
                 ...values,
                 employeeId: id,

@@ -26,7 +26,7 @@ namespace SC_ReactProject.WEB.Controllers
         };
 
         [HttpPost("authenticate")]
-        [Route("/login")]
+        [Route("/api/login")]
         public IActionResult Authenticate(AuthRequest model)
         {
             var user = _users.SingleOrDefault(x => x.login == model.login && x.password == model.password);
