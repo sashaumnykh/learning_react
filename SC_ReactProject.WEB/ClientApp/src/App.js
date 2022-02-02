@@ -8,6 +8,7 @@ import { EditEmployeeRoute } from './components/EditEmployeeRoute';
 import axios from 'axios';
 
 import './styles.css'
+import { RedirectHelper } from './helper/RedirectHelper';
 
 export default function App() {
 
@@ -44,17 +45,18 @@ export default function App() {
 
     return (
         <div>
-            <Route path="/employee/:id" component={EditEmployeeRoute} />
-            <Route path="/add" component={AddEmployeeRoute} />
             <Route exact path="/" >
                 {isLoggedIn 
                 ? ( <div><EmployeesList /></div>) 
                 : <LogInForm login={login} error={loginError}/>}
             </Route>
-            <Route path="/api:other" > 
-                <Redirect to="/" />
-            </Route>
-            <Redirect to="/" />
+            {!isLoggedIn && <Redirect to="/" />}
+            {isLoggedIn && (
+                <div>
+                <Route path="/employee/:id" component={EditEmployeeRoute} />
+                <Route exact path="/add" component={AddEmployeeRoute} />
+                </div>
+            )}
         </div>
     );
 }
