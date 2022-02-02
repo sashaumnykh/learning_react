@@ -21,6 +21,7 @@ export default function App() {
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
     const [reload, setReload] = useState(0);
+    const [loginError, setLoginError] = useState('');
 
     const login = (login, password) => {
         axios({
@@ -36,6 +37,7 @@ export default function App() {
             setReload(reload + 1);
         })
         .catch(function (error) {
+            setLoginError('login or password is incorrect.')
             console.log(error);
         });
     }
@@ -47,7 +49,7 @@ export default function App() {
             <Route exact path="/" >
                 {isLoggedIn 
                 ? ( <div><EmployeesList /></div>) 
-                : <LogInForm login={login}/>}
+                : <LogInForm login={login} error={loginError}/>}
             </Route>
             <Redirect to="/" />
         </div>

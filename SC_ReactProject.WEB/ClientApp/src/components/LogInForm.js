@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 
-function LogInForm( {login} ) {
+function LogInForm( {login, error} ) {
     
     
     const validate = values => {
@@ -30,6 +30,10 @@ function LogInForm( {login} ) {
         <form className='f-out' onSubmit={formik.handleSubmit}>
             <div className="f-in">
                 <h2>Log in</h2>
+                <div className='error-message'>
+                    {error ? error : null}
+                </div>
+                
                 <div htmlFor="login" className="form-group">
                     <label htmlFor="login">login:</label>
                     <input id="login" name="login" type="text" 
@@ -40,7 +44,7 @@ function LogInForm( {login} ) {
                 </div>
                 <div htmlFor="password" className="form-group">
                     <label htmlFor="password">password:</label>
-                    <input id="password" name="password" type="text" 
+                    <input id="password" name="password" type="password" 
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.password}/>
