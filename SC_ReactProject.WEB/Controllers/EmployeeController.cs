@@ -48,15 +48,15 @@ namespace SC_ReactProject.WEB.Controllers
 
         [HttpGet]
         [Route("/getall")]
-        public IEnumerable<EmployeeVM> GetAll()
+        public (IEnumerable<EmployeeVM>, int) GetAll(int page = 0, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
-            IEnumerable<EmployeeDTO> employees = _employeeService.GetAll();
+            (IEnumerable<EmployeeDTO> employees, int count) = _employeeService.GetAll(page, sort, sortOrder, comparer);
             List<EmployeeVM> result = new List<EmployeeVM>();
             foreach (EmployeeDTO employee in employees)
             {
                 result.Add(FromDTO(employee));
             }
-            return result;
+            return (result, count);
         }
 
         [HttpGet]

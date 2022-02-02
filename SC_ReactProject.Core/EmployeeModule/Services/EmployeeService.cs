@@ -54,14 +54,15 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
             return ToDTO(employee);
         }
 
-        public IEnumerable<EmployeeDTO> GetAll()
+        public (IEnumerable<EmployeeDTO>, int) GetAll(int page = 0, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
             List<EmployeeDTO> emps = new List<EmployeeDTO>();
-            foreach (Employee employee in _employeeRepo.GetAll())
+            (IEnumerable<Employee> employees, int count) = _employeeRepo.GetAll(page, sort, sortOrder, comparer);
+            foreach (Employee employee in employees)
             {
                 emps.Add(ToDTO(employee));
             }
-            return emps;
+            return (emps, count);
         }
 
         public void Update(EmployeeDTO employeeDTO)

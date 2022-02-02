@@ -12,7 +12,9 @@ function EmployeesList() {
     const history = useHistory();
 
     const [employees, setEmployees] = useState([]);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('default');
+    const [sortField, setSortField] = useState('name');
+    const [toSort, setToSort] = useState(false);
 
     const [reload, setReload] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -21,43 +23,25 @@ function EmployeesList() {
     
     useEffect(()=>{
         axios('/getall', {
+            params: {
+                page: currentPageNumber,
+                sort: toSort,
+                sortOrder: sortOrder,
+                comparer: sortField
+            },
             headers: {
                 Authorization: "Bearer " + sessionStorage.getItem(tokenRequest)
             }
         })
             .then(res => {
+                debugger;
+                console.log('res:', res);
+                console.log('data: ', res.data);
                 setEmployees(res.data);
                 setIsLoaded(true);
             })
             .catch(error => console.log(error));
     }, [reload]);
-
-    const onSort = (event, sortKey, sortOrder) => {
-        const data = [...employees];
-        switch(sortOrder) {
-            case 'default': {
-                let key = 'employeeId';
-                data.sort((a,b) => a[key] - b[key]);
-                setEmployees(data);
-                break;
-            }
-            case 'asc': {
-                data.sort((a,b) => a[sortKey].localeCompare(b[sortKey]));
-                setEmployees(data);
-                break;
-            }
-            case 'desc': {
-                data.sort((a,b) => -a[sortKey].localeCompare(b[sortKey]));
-                setEmployees(data);
-                break;
-            }
-            default: {
-                alert('sos! 42')
-                break;
-            }
-        }
-        setEmployees(data);
-    }
 
     const handleDelete = (id) => {
         const options = {
@@ -146,23 +130,28 @@ function EmployeesList() {
                 <thead>
                     <tr key='header'>
                         <th onClick={e => {
-                            onSort(e, 'name', sortOrder);
+                            setSortField('name');
+                            setToSort(true);
                             changeSortOrder();
                         }}>Name</th>
                         <th onClick={e => {
-                            onSort(e, 'email', sortOrder);
+                            setSortField('email');
+                            setToSort(true);
                             changeSortOrder();
                         }}>Email</th>
                         <th onClick={e => {
-                            onSort(e, 'bday', sortOrder);
+                            setSortOrder('bday');
+                            setToSort(true);
                             changeSortOrder();
                         }}>Birthday</th>
                         <th onClick={e => {
-                            onSort(e, 'salary', sortOrder);
+                            setSortField('salary');
+                            setToSort(true);
                             changeSortOrder();
                         }}>Salary</th>
                         <th onClick={e => {
-                            onSort(e, 'lastModified', sortOrder);
+                            setSortField('lastModified');
+                            setToSort(true);
                             changeSortOrder();
                         }}>Last modified date</th>
                         <th></th>
@@ -170,9 +159,7 @@ function EmployeesList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        emps.slice((currentPageNumber - 1) * 10, currentPageNumber * 10)
-                    }
+                    { emps }
                 </tbody>
             </table>
             </div>

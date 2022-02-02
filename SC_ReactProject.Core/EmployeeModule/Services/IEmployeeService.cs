@@ -9,7 +9,7 @@ namespace SC_ReactProject.Core.EmployeeModule.Services
     public interface IEmployeeService
     {
         EmployeeDTO Get(int id);
-        IEnumerable<EmployeeDTO> GetAll();
+        (IEnumerable<EmployeeDTO>, int) GetAll(int page = 0, bool sort = false, string sortOrder = "default", string comparer = "name");
         int Create(EmployeeDTO employeeDTO);
         void Delete(int id);
         void Update(EmployeeDTO employeeDTO);

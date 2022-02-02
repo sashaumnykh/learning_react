@@ -10,7 +10,7 @@ namespace SC_ReactProject.Core.EmployeeModule
     {
         int Create(T entity);
         T Get(int id);
-        IEnumerable<T> GetAll();
+        (IEnumerable<T>, int) GetAll(int page = 0, bool sort = false, string sortOrder = "default", string comparer = "name");
         void Delete(int id);
         void Update(T entity);
     }

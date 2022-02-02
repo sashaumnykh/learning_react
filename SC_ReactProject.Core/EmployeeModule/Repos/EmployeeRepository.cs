@@ -38,9 +38,51 @@ namespace SC_ReactProject.Core.EmployeeModule
             return db.Employees.Find(id);
         }
 
-        public IEnumerable<Employee> GetAll()
+        public (IEnumerable<Employee>, int) GetAll(int page = 1, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
-            return db.Employees.ToList();
+            Employee[] employees = { };
+            int count = db.Employees.ToList().Count;
+            if (!sort && sortOrder == "default")
+            {
+                employees = db.Employees.ToArray();
+            }
+            else if (sort && sortOrder != "default")
+            {
+                switch (comparer)
+                {
+                    case "name":
+                        {
+                            employees = db.Employees.OrderBy(e => e.name).ToArray();
+                            break;
+                        }
+                    case "email":
+                        {
+                            employees = db.Employees.OrderBy(e => e.email).ToArray();
+                            break;
+                        }
+                    case "bday":
+                        {
+                            employees = db.Employees.OrderBy(e => e.bday).ToArray();
+                            break;
+                        }
+                    case "salary":
+                        {
+                            employees = db.Employees.OrderBy(e => e.salary).ToArray();
+                            break;
+                        }
+                    case "lastModified":
+                        {
+                            employees = db.Employees.OrderBy(e => e.lastModified).ToArray();
+                            break;
+                        }
+                }
+                if (sortOrder == "desc")
+                {
+                    Array.Reverse(employees);
+                }
+            }
+            //employees.Sort(((p, q) => p.name.CompareTo(q.name)));
+            return (new ArraySegment<Employee>(employees, (page - 1) * 10, page * 10), count);
         }
 
         public void Update(Employee employee)
