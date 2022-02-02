@@ -4,6 +4,7 @@ import { isLoggedInRequest, tokenRequest } from '../helper/Consts';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
+import DatePicker from "react-datepicker";
 
 export function EditEmployee() {
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
@@ -22,6 +23,9 @@ export function EditEmployee() {
     const history = useHistory();
 
     const [redirect, setRedirect] = useState(false);
+
+    const [birthday, setBirthday] = useState(new Date());
+    const [bdayError, setBdayError] = useState('');
     
     const token = sessionStorage.getItem(tokenRequest);
 
@@ -38,10 +42,12 @@ export function EditEmployee() {
         })
             .then(res => {
                 setEmployee(res.data);
+                setBirthday(new Date(res.data.bday));
                 setIsLoaded(true);
             })
             .catch(error => console.log(error));
-        }, [isLoaded]);
+            // eslint-disable-next-line
+        }, []);
 
     const saveButtonHandler = (values) => {
         let now = new Date().toUTCString();
@@ -50,7 +56,6 @@ export function EditEmployee() {
             name: values.name,
             email: values.email,
             salary: values.salary,
-            bday: values.bday,
             lastModified: now
         });
 
@@ -63,6 +68,7 @@ export function EditEmployee() {
             data: {
                 ...values,
                 employeeId: id,
+                bday: birthday,
                 lastModified: now
             },
             }).then(function (response) {
@@ -85,9 +91,6 @@ export function EditEmployee() {
         else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
             errors.email = 'invalid email address';
         }
-        if (!values.bday) {
-            errors.bday = 'bday is required';
-        }
         if (!values.salary) {
             errors.salary = 'salary is required';
         }
@@ -100,6 +103,17 @@ export function EditEmployee() {
         return errors;
     }
     
+    const handleBdayChange = (date) => {
+        if (date !== null) {
+            setBirthday(date);
+            setBdayError('');
+        }
+        else {
+            setBirthday(date);
+            setBdayError('birthay date is required');
+        }
+    }
+
     if (redirect) {
         return <Redirect to='/' />;
     }
@@ -138,10 +152,15 @@ export function EditEmployee() {
                             </div>
                             <div>
                                 <label htmlFor="bday">birthday:</label>
-                                <Field id="bday" name="bday" type="date"/>
-                                <div>
-                                    <ErrorMessage name="bday" />
-                                </div>
+                                <DatePicker 
+                                    selected={birthday} 
+                                    onChange={date => handleBdayChange(date)}
+                                    value={birthday ? birthday.toLocaleDateString() : null}
+                                    isClearable
+                                    showYearDropdown
+                                    showMonthDropdown
+                                />
+                                { (bdayError) && <div>{bdayError}</div>}
                             </div>
                             <div>
                                 <label htmlFor="salary">salary:</label>
