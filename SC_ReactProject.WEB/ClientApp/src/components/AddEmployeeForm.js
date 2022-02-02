@@ -86,7 +86,7 @@ function AddEmployeeForm() {
     }
 
     if (redirect) {
-        return <Redirect to='/' />;
+        return <Redirect to='/employees' />;
     }
     
     return(
@@ -131,7 +131,7 @@ function AddEmployeeForm() {
                 </div>
                 <div className='buttons'>
                     <input type="submit" value="ADD" disabled={!isValid}/>
-                    <button onClick={() => {history.push('/')}}>CANCEL</button>
+                    <button onClick={() => {history.push('/employees')}}>CANCEL</button>
                 </div>
             </div>
         </form>

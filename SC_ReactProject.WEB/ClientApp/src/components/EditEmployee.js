@@ -115,7 +115,7 @@ export function EditEmployee() {
     }
 
     if (redirect) {
-        return <Redirect to='/' />;
+        return <Redirect to='/employees' />;
     }
 
     return(
@@ -171,7 +171,7 @@ export function EditEmployee() {
                             </div>
                             <div className='buttons'>
                                 <button type="submit">SAVE</button>
-                                <button onClick={() => {history.push('/')}}>CANCEL</button>
+                                <button onClick={() => {history.push('/employees')}}>CANCEL</button>
                             </div>
                         </Form>
                     </Formik>}

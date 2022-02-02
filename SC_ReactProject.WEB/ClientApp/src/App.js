@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, useHistory } from 'react-router-dom';
 import EmployeesList from './components/EmployeesList';
 import LogInForm from './components/LogInForm';
 import { isLoggedInRequest, tokenRequest } from './helper/Consts';
@@ -8,7 +8,7 @@ import { EditEmployeeRoute } from './components/EditEmployeeRoute';
 import axios from 'axios';
 
 import './styles.css'
-import { RedirectHelper } from './helper/RedirectHelper';
+import { RedirectHelper, RouteHelper } from './helper/RouteHelper';
 
 export default function App() {
 
@@ -18,6 +18,8 @@ export default function App() {
         : navigator.language;
 
     sessionStorage.setItem('locale', userLocale);
+
+    const history = useHistory();
 
     const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
 
@@ -36,6 +38,7 @@ export default function App() {
             sessionStorage.setItem(tokenRequest, response.data);
             sessionStorage.setItem(isLoggedInRequest, true);
             setReload(reload + 1);
+            history.push('/employees');
         })
         .catch(function (error) {
             setLoginError('login or password is incorrect.')
@@ -46,17 +49,11 @@ export default function App() {
     return (
         <div>
             <Route exact path="/" >
-                {isLoggedIn 
-                ? ( <div><EmployeesList /></div>) 
-                : <LogInForm login={login} error={loginError}/>}
+                <LogInForm login={login} error={loginError}/>
             </Route>
-            {!isLoggedIn && <Redirect to="/" />}
-            {isLoggedIn && (
-                <div>
-                <Route path="/employee/:id" component={EditEmployeeRoute} />
-                <Route exact path="/add" component={AddEmployeeRoute} />
-                </div>
-            )}
+            <RouteHelper path='/employees' component={EmployeesList} />
+            <RouteHelper path="/employee/:id" component={EditEmployeeRoute} />
+            <RouteHelper exact path="/add" component={AddEmployeeRoute} />
         </div>
     );
 }

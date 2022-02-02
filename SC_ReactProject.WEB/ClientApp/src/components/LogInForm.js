@@ -1,9 +1,11 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
+import { isLoggedInRequest } from '../helper/Consts';
 
 function LogInForm( {login, error} ) {
     
-    
+    const isLoggedIn = sessionStorage.getItem(isLoggedInRequest);
     const validate = values => {
         const errors = {};
         if (!values.login) {
@@ -26,6 +28,11 @@ function LogInForm( {login, error} ) {
         },
       });
 
+    if (isLoggedIn) {
+        return(
+            <Redirect to='/employees' />
+        )
+    }
     return(
         <form className='f-out' onSubmit={formik.handleSubmit}>
             <div className="f-in">
