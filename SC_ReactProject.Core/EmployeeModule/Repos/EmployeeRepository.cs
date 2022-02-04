@@ -41,11 +41,11 @@ namespace SC_ReactProject.Core.EmployeeModule
 
         public GetAllResponse GetAll(int page = 1, bool sort = false, string sortOrder = "default", string comparer = "name")
         {
-            Employee[] employees = { };
-            int count = db.Employees.ToList().Count;
+            IQueryable<Employee> emps = Enumerable.Empty<Employee>().AsQueryable();
+            int count = db.Employees.Count();
             if (sortOrder == "default")
             {
-                employees = db.Employees.ToArray();
+                emps = db.Employees.Take(count);
             }
             else if (sort)
             {
@@ -53,49 +53,53 @@ namespace SC_ReactProject.Core.EmployeeModule
                 {
                     case "name":
                         {
-                            employees = db.Employees.OrderBy(e => e.name).ToArray();
+                            emps = (sortOrder == "desc")
+                                ? db.Employees.OrderByDescending(e => e.name)
+                                : db.Employees.OrderBy(e => e.name);
                             break;
                         }
                     case "email":
                         {
-                            employees = db.Employees.OrderBy(e => e.email).ToArray();
+                            emps = (sortOrder == "desc")
+                                ? db.Employees.OrderByDescending(e => e.email)
+                                : db.Employees.OrderBy(e => e.email);
                             break;
                         }
                     case "bday":
                         {
-                            employees = db.Employees.OrderBy(e => e.bday).ToArray();
+                            emps = (sortOrder == "desc")
+                                ? db.Employees.OrderByDescending(e => e.bday)
+                                : db.Employees.OrderBy(e => e.bday);
                             break;
                         }
                     case "salary":
                         {
-                            employees = db.Employees.OrderBy(e => e.salary).ToArray();
+                            emps = (sortOrder == "desc")
+                                ? db.Employees.OrderByDescending(e => e.salary)
+                                : db.Employees.OrderBy(e => e.salary);
                             break;
                         }
                     case "lastModified":
                         {
-                            employees = db.Employees.OrderBy(e => e.lastModified).ToArray();
+                            emps = (sortOrder == "desc")
+                                ? db.Employees.OrderByDescending(e => e.lastModified)
+                                : db.Employees.OrderBy(e => e.lastModified);
                             break;
                         }
                 }
-                if (sortOrder == "desc")
-                {
-                    Array.Reverse(employees);
-                }
             }
 
-            int len = employees.Length;
-
-            if (len < page * 10)
+            if (count < page * 10)
             {
                 return new GetAllResponse(
-                employees: new ArraySegment<Employee>(employees).Slice((page - 1) * 10, len - (page - 1) * 10),
+                employees: emps.Skip((page - 1) * 10).Take(count - (page - 1) * 10).ToArray(),
                 count: count
             );
             }
 
             //employees.Sort(((p, q) => p.name.CompareTo(q.name)));
             return new GetAllResponse(
-                employees: new ArraySegment<Employee>(employees).Slice((page - 1) * 10, 10),
+                employees: emps.Skip((page - 1) * 10).Take(10).ToArray(),
                 count: count
             );
         }
